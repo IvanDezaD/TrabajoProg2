@@ -1,19 +1,8 @@
-#include <iostream>
-
-using namespace std;
+#include "log.h"
 
 //Bloque de codigo que sirve para depurar mas comodamente ademas de mostrar errores.
 #ifdef LOG
-//Enumeracion que contiene los tipos de log que ocurriran durante el programa.
-enum logLevel {
-  ERROR,
-  WARNING,
-  DEBUG,
-  INFO
-};
-
-//Nivel de depuracion del programa
-logLevel LOGLEVEL=ERROR;
+logLevel LOGLEVEL=WARNING; //Nivel de depuracion del programa
 
 //Funcion que dado un nivel donde mostrar y un mensaje muestra ese mensaje dependiendo de la configuracion de depuracion y el nivel
 //de depuracion recibido
@@ -51,14 +40,7 @@ void log(int logValue, string mensaje) {
 #endif
 
 #ifndef LOG
-#define LOGLEVEL ERROR
-enum logLevel {
-  ERROR,
-  WARNING,
-  DEBUG,
-  INFO
-};
-
+logLevel LOGLEVEL = ERROR;
 void log(int logValue, string mensaje) {
   if(logValue == ERROR){
     string prefix = "[\x1b[31mERROR\x1b[0m] ";
@@ -67,6 +49,7 @@ void log(int logValue, string mensaje) {
   }
 }
 #endif
+
 
 int main(){
   log(INFO, "Esto es un mensaje de info");
