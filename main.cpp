@@ -58,8 +58,13 @@ enum logLevel {
   DEBUG,
   INFO
 };
-void log(int num, string message) {
 
+void log(int logValue, string mensaje) {
+  if(logValue == ERROR){
+    string prefix = "[\x1b[31mERROR\x1b[0m] ";
+    string output = prefix + mensaje;
+    cout << output << endl;
+  }
 }
 #endif
 
