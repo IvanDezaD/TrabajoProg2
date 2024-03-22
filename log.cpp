@@ -1,7 +1,9 @@
 #include "log.h"
 
+using namespace std;
+
 //Bloque de codigo que sirve para depurar mas comodamente ademas de mostrar errores.
-#ifdef LOG
+#ifdef __DEBUG__
 logLevel LOGLEVEL=WARNING; //Nivel de depuracion del programa
 
 //Funcion que dado un nivel donde mostrar y un mensaje muestra ese mensaje dependiendo de la configuracion de depuracion y el nivel
@@ -39,7 +41,7 @@ void log(int logValue, string mensaje) {
 }
 #endif
 
-#ifndef LOG
+#ifndef __DEBUG__
 logLevel LOGLEVEL = ERROR;
 void log(int logValue, string mensaje) {
   if(logValue == ERROR){
@@ -52,8 +54,8 @@ void log(int logValue, string mensaje) {
 
 
 int main(){
-  log(INFO, "Esto es un mensaje de info");
-  log(DEBUG, "Esto es un mensaje debug");
-  log(WARNING, "Esto es un mensaje de warning");
-  log(ERROR, "Esto es un mensaje de error");
+  LOG(INFO, "Esto es un mensaje de info");
+  LOG(DEBUG, "Esto es un mensaje debug");
+  LOG(WARNING, "Esto es un mensaje de warning");
+  LOG(ERROR, "Esto es un mensaje de error");
 }

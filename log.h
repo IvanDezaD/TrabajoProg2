@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-using namespace std;
 
 enum logLevel {
   ERROR,
@@ -12,6 +11,12 @@ enum logLevel {
 };
 
 
+#ifdef __DEBUG__
 extern logLevel LOGLEVEL;
 
-void log(int logValue, string mensaje);
+void log(int logValue, std::string mensaje);
+
+#define LOG(level,msg) log(level,msg)
+#else
+#define LOG(level,msg) 
+#endif
