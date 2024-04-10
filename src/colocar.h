@@ -18,7 +18,7 @@ void colocarValor(tablero *miTablero, int row, int column,int value);
 int cuantosVeo(tablero miTablero, int row, int column);
 
 //Recibimos el tablero y unas coordenadas y devolvemos la altura de esa manzana
-int valorEnCordenada(tablero miTablero, int row, int column); //return miTablero.tablero[row][column]
+int valorEnCordenada(tablero *miTablero, int row, int column); //return miTablero->tablero[row][column]
 
 //Recibimos un tablero y liberamos el espacio reservado
 void liberarTablero(tablero *miTablero);
@@ -26,14 +26,14 @@ void liberarTablero(tablero *miTablero);
 //Recibimos el tablero y ponemos las casillas inicialmente con los valores del fichero!!
 void inicializarTablero(tablero *miTablero, std::string fichero);
 
-//Leemos la cabecera, que contiene cuantos -> lo devolvemos enm los valores rows y columns, ya que hay que devolver 2 valores
-void leerCabecera(std::string fichero, int* rows, int* columns);
-
 //Leemos y cargamos en la memoria el tablero leido del fichero.
-void leerTablero(tablero *miTablero, std::string fichero);
+void leerFichero(tablero *miTablero, std::string fichero);
 
 //Recibimos el tablero y devolvemos el tamaño de columnas que tiene
 int getMaxColumn(tablero *miTablero);
 
 //Recibimos el tablero y devolvemos el maximo numero de filas
 int getMaxRows(tablero *miTablero);
+
+//Recibimos el tablero y lo imprimimos en pantalla
+void imprimirTablero(tablero *miTablero);

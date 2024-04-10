@@ -4,18 +4,19 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <fstream>
+#include <iostream>
 
 //el tamaño de matriz es 3x3 pero esta funcion nos la guardamos para cuando el tamaño sea dinamico (por si lo hacemos)
 void reservarTablero(tablero *miTablero, int rows, int columns) {
   miTablero->rows = rows;
   miTablero->columns = columns;
-  miTablero->tablero = (int**)malloc(rows*sizeof(int*));
+  miTablero->tablero = (int**)malloc((rows+2)*sizeof(int*)); //necesitamos espacio para rows y 2 mas (las que nos indican cuantos edificios se ven)
   if(miTablero->tablero == NULL) {
     myError("Error reservando memoria para el tablero!");
   }
 
   for(int i = 0; i < rows; i++) {
-    miTablero->tablero[i] = (int*)malloc(columns * sizeof(int));
+    miTablero->tablero[i] = (int*)malloc((columns+2) * sizeof(int)); //Lo mismo para las columnas
     if(miTablero->tablero[i] == NULL) {
       myError("Error reservando memoria para las columnas del tablero!");
     }
@@ -35,10 +36,10 @@ void inicializarTablero2(tablero* miTablero, int rows, int columns) {
 }
 */
 
-//Para liberar la memoria reservada para el tablero
+/*-----------LIBERAR MEMORIA------------*/
 void liberarTablero(tablero* miTablero) {
   //Liberamos memoria de las columnas de cada fila
-  for(int i = 0; i < miTablero->rows; i++) {
+  for(int i = 0; i < (miTablero->rows + 2); i++) {
     free(miTablero->tablero[i]);
   }
   //Liberamos la memoria de cada fila
@@ -48,17 +49,17 @@ void liberarTablero(tablero* miTablero) {
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
   //Mandar error si intentamos acceder a una direccion fuera de rango!
-  if(miTablero->rows<= row || miTablero->columns <= column) {
+  if(miTablero->rows<= row+1 || miTablero->columns <= column + 1) {
     myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
   }
   //Si la posicion es valida devolvemos su contenido
-  miTablero->tablero[row][column] = value;
+  miTablero->tablero[row+1][column+1] = value;
 }
 
 int valorEnCordenada(tablero *miTablero, int row, int column) {
   info("Obteniendo valor de las coordenadas : %d, %d", row, column);
-  //Mandar error si intentamos acceder a una direccion de memoria fuera de rango
-  if(miTablero->rows < row || miTablero->columns < column) {
+  //Mandar error si intentamos acceder a una direccion de memoria fuera de rango (invalida, ya que hay mas direcciones validas que no son visibles)
+  if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
      myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
   }
   return miTablero->tablero[row][column];
@@ -72,7 +73,7 @@ int getMaxcolumn(tablero* miTablero) {
   return miTablero->columns;
 }
 
-void leerTablero(tablero *miTablero, std::ifstream fichero) {
+void leerFichero(tablero *miTablero, std::ifstream fichero) {
   if(!fichero.is_open()) {
     myError("El ifstream proporcionado no ha sido inicializado correctamente, stackTrace : %s", __FUNCTION__);
   }
@@ -81,6 +82,16 @@ void leerTablero(tablero *miTablero, std::ifstream fichero) {
   while((value = getchar()) != EOF){
     
     
+  }
+}
+
+//Imprimimos el tablero actual
+void imprimirTablero(tablero *miTablero) {
+  for(int i = 1; i < miTablero->rows+1; i++) {
+    for(int j = 1; j < miTablero->columns+1; j++) {
+     std::cout << miTablero->tablero[i][j];
+    }
+     std::cout << std::endl;
   }
 }
 
