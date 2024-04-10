@@ -67,6 +67,7 @@ void liberarTablero(tablero* miTablero) {
   free(miTablero->tablero);
 }
 ```
-**¿Porque lo hemos hecho asi?**\n
+**¿Porque lo hemos hecho asi?**
+
 Lo hemos implementado así, porque de esta manera podemos acceder a la matriz de la misma manera que lo hariamos con una matriz estatica M[x][y].
 El primer corchete indexara en el vector de punteros a vectores. Y el segundo indexara en el vector que representa esa fila.
