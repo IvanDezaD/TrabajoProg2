@@ -1,7 +1,9 @@
 #include "colocar.h"
 #include "log.h"
+#include <cstdio>
 #include <cstdlib>
 #include <stdlib.h>
+#include <fstream>
 
 //el tamaño de matriz es 3x3 pero esta funcion nos la guardamos para cuando el tamaño sea dinamico (por si lo hacemos)
 void reservarTablero(tablero *miTablero, int rows, int columns) {
@@ -45,10 +47,21 @@ void liberarTablero(tablero* miTablero) {
 
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
+  //Mandar error si intentamos acceder a una direccion fuera de rango!
   if(miTablero->rows<= row || miTablero->columns <= column) {
     myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
   }
+  //Si la posicion es valida devolvemos su contenido
   miTablero->tablero[row][column] = value;
+}
+
+int valorEnCordenada(tablero *miTablero, int row, int column) {
+  info("Obteniendo valor de las coordenadas : %d, %d", row, column);
+  //Mandar error si intentamos acceder a una direccion de memoria fuera de rango
+  if(miTablero->rows < row || miTablero->columns < column) {
+     myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  }
+  return miTablero->tablero[row][column];
 }
 
 int getMaxRow(tablero* miTablero) {
@@ -57,6 +70,18 @@ int getMaxRow(tablero* miTablero) {
 
 int getMaxcolumn(tablero* miTablero) {
   return miTablero->columns;
+}
+
+void leerTablero(tablero *miTablero, std::ifstream fichero) {
+  if(!fichero.is_open()) {
+    myError("El ifstream proporcionado no ha sido inicializado correctamente, stackTrace : %s", __FUNCTION__);
+  }
+  
+  int value;
+  while((value = getchar()) != EOF){
+    
+    
+  }
 }
 
 //Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)

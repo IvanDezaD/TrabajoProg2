@@ -29,6 +29,9 @@ void inicializarTablero(tablero *miTablero, std::string fichero);
 //Leemos la cabecera, que contiene cuantos -> lo devolvemos enm los valores rows y columns, ya que hay que devolver 2 valores
 void leerCabecera(std::string fichero, int* rows, int* columns);
 
+//Leemos y cargamos en la memoria el tablero leido del fichero.
+void leerTablero(tablero *miTablero, std::string fichero);
+
 //Recibimos el tablero y devolvemos el tamaño de columnas que tiene
 int getMaxColumn(tablero *miTablero);
 
