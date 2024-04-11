@@ -19,6 +19,10 @@
 # Fortran module files
 *.mod
 *.smod
+src/colocar.h 
+src/colocar.cpp
+src/log.h
+README.md
 
 # Compiled Static libraries
 *.lai
