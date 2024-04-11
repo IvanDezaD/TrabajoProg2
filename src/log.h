@@ -8,5 +8,5 @@
 #define info(msg, ...)
 #define okay(msg, ...)
 #define myError(msg, ...)
-#endif // _DEBUG
+#endif // __DEBUG__
 
