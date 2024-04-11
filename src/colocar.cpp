@@ -34,6 +34,7 @@ void liberarTablero(tablero* miTablero) {
   free(miTablero->tablero);
 }
 
+/*---------------------------COLOCAMOS VALOR EN COORDENADAS----------------------------*/
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
   //Mandar error si intentamos acceder a una direccion fuera de rango!
@@ -44,6 +45,7 @@ void colocarValor(tablero *miTablero, int row, int column, int value) {
   miTablero->tablero[row+1][column+1] = value;
 }
 
+/*--------------------QUE VALOR HAY EN LAS COORDENADAS ESPECIFICADAS--------------------*/
 int valorEnCordenada(tablero *miTablero, int row, int column) {
   info("Obteniendo valor de las coordenadas : %d, %d", row, column);
   //Mandar error si intentamos acceder a una direccion de memoria fuera de rango (invalida, ya que hay mas direcciones validas que no son visibles)
@@ -53,14 +55,18 @@ int valorEnCordenada(tablero *miTablero, int row, int column) {
   return miTablero->tablero[row][column];
 }
 
+/*--------NUMERO DE FILAS--------*/
 int getMaxRow(tablero* miTablero) {
   return miTablero->rows;
 }
 
+/*---------NUMERO DE COLUMNAS--------*/
 int getMaxcolumn(tablero* miTablero) {
   return miTablero->columns;
 }
 
+//NOTE: Podríamos dividir esto en 2 funciones diferentes y pasar el ifstream de una a otra.
+/*-------------------INICIALIZAMOS EL TABLERO--------------------*/
 void inicializarTablero(tablero *miTablero, std::string fichero) {
   info("Inicializando el tablero!");
   
@@ -107,7 +113,7 @@ void inicializarTablero(tablero *miTablero, std::string fichero) {
   }
 }
 
-//Imprimimos el tablero actual
+/*----------IMPRIMIMOS EL TABLERO----------*/
 void imprimirTablero(tablero *miTablero) {
   for(int i = 1; i < miTablero->rows+1; i++) {
     for(int j = 1; j < miTablero->columns+1; j++) {
@@ -115,6 +121,71 @@ void imprimirTablero(tablero *miTablero) {
     }
      std::cout << std::endl;
   }
+}
+
+int cuantosVeoIzda(int vector[], int size) {
+  int maximo = vector[0];
+  int veo = 0;
+  for(int i = 1; i < size; i++) {
+    if(vector[i] > maximo) {
+      maximo = vector[i];
+      veo = i;
+      if(i < size && vector[i] > vector[i+1]) {
+        return veo;
+      }
+    }
+  }
+  return veo;
+}
+
+int cuantosVeoDcha(int vector[], int size) {
+  int max = vector[size-1];
+  int veo = 0;
+  for(int i = size-2; i <= 0; i--) {
+    if(vector[i] > max) {
+      max = vector[i];
+      veo = i;
+      if(i < size && vector[i] > vector[i+1]) {
+        return veo;
+      }
+    }
+  }
+  return veo;
+}
+
+int cuantosVeoSuperior(tablero *miTablero, int column) {
+  int max = miTablero->tablero[0][column];
+  int veo = 0;
+  for(int i = 1; i < miTablero->rows; i++) {
+    if(miTablero->tablero[i][0] > max) {
+      max = miTablero->tablero[i][column];
+      veo = i;
+      if(i < miTablero->rows && miTablero->tablero[i][0] > miTablero->tablero[i+1][0]) {
+        return veo;
+      }
+    }
+  }
+  return veo;
+}
+
+int cuantosVeoInferior(tablero *miTablero, int column) {
+  int max = miTablero->tablero[0][column];
+  int veo = 0;
+  for(int i = 1; i < miTablero->rows; i++) {
+    if(miTablero->tablero[i][0] > max) {
+      max = miTablero->tablero[i][column];
+      veo = i;
+      if(i < miTablero->rows && miTablero->tablero[i][0] > miTablero->tablero[i+1][0]) {
+        return veo;
+      }
+    }
+  }
+  return veo;
+}
+
+//NOTE: Con las coordenadas sacar la direccion(cual de las 4 posibles funciones usar)
+int cuantosVeo(tablero *miTablero, int row, int column) {
+  
 }
 
 //Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)
