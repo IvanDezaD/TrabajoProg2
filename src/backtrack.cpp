@@ -7,4 +7,5 @@ bool resolverTablero(tablero *miTablero) {
   if estaResuelto(miTablero) {
     return true;
   }
-}
+  else {
+  
