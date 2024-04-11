@@ -1,6 +1,10 @@
 #pragma once
 #include <string>
 
+//TODO: quedan por hacer las especificaciones formales.
+//TODO: revisar funciones
+//TODO: quedan por implementar: cuantosVeo, estaResuelto, e inicializarTablero.
+
 /*----Nuestra estructura tablero-----*/
 typedef struct {
   int rows;
@@ -17,6 +21,9 @@ void colocarValor(tablero *miTablero, int row, int column,int value);
 //Recibimos coordenadas y devolvemos cuantos edificios vemos desde esa coordenada (para este caso importante validar que las coordenadas son correctas)
 int cuantosVeo(tablero miTablero, int row, int column);
 
+//Recibimos un tablero, y devolvemos si esta resuelto o no.
+bool estaResuelto(tablero miTablero);
+
 //Recibimos el tablero y unas coordenadas y devolvemos la altura de esa manzana
 int valorEnCordenada(tablero *miTablero, int row, int column); //return miTablero->tablero[row][column]
 
@@ -26,13 +33,10 @@ void liberarTablero(tablero *miTablero);
 //Recibimos el tablero y ponemos las casillas inicialmente con los valores del fichero!!
 void inicializarTablero(tablero *miTablero, std::string fichero);
 
-//Leemos y cargamos en la memoria el tablero leido del fichero.
-void leerFichero(tablero *miTablero, std::string fichero);
-
-//Recibimos el tablero y devolvemos el tamaño de columnas que tiene
+//Recibimos el tablero y devolvemos el numero de columnas que tiene.
 int getMaxColumn(tablero *miTablero);
 
-//Recibimos el tablero y devolvemos el maximo numero de filas
+//Recibimos el tablero y devolvemos el numero de filas que tiene
 int getMaxRows(tablero *miTablero);
 
 //Recibimos el tablero y lo imprimimos en pantalla

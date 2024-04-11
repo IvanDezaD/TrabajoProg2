@@ -4,7 +4,6 @@ Repositorio del trabajo de la asignatura programacion 2 del segundo semestre
 Nuestro objetivo principal es hacer un programa que sea capaz de resolver el siguiente problema:
 - Siendo que se entrega un fichero con el siguiente formato: 
 ```
-3 3
 x 1 2 3 x
 2 0 0 0 1
 1 0 0 0 2
@@ -70,3 +69,32 @@ void liberarTablero(tablero* miTablero) {
 **¿Porque lo hemos hecho asi?**
 Lo hemos implementado así, porque de esta manera podemos acceder a la matriz de la misma manera que lo hariamos con una matriz estatica M[x][y].
 El primer corchete indexara en el vector de punteros a vectores. Y el segundo indexara en el vector que representa esa fila.
+
+## Implementaciones especiales
+En un principio el tablero aparentemente, es 3x3 pero tal y como hemos decidido implementarlo, la matriz del tablero tiene tamaño 5x5 (N+2xM+2). Algo similar a este diagrama:
+```
+                           +--+--+--+--+--+
+                           |  |  |  |  |  |
++--+--+--+                 +--------------+
+|x |x |x |                 |  |x |x |x |  |
++--------+  Realmente es   +--------------+
+|x |x |x |  +----------->  |  |x |x |x |  |
++--------+                 +--------------+
+|x |x |x |                 |  |x |x |x |  |
++--+--+--+                 +--------------+
+                           |  |  |  |  |  |
+                           +--+--+--+--+--+
+```
+Queríamos hacer que tu desde la funcion que resuekve el tablero no te tuvieras que preocupar por las 2 filas y columnas extra y se tratara como una matrix NxM. Para ello en cada funcion de acceso a la matriz, ya sea para leer o para cambiar se le suma 1 al valor de coordenadas recibido.
+```c
+void colocarValor(tablero *miTablero, int row, int column, int value) {
+  info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
+  //Mandar error si intentamos acceder a una direccion fuera de rango!
+  if(miTablero->rows<= row+1 || miTablero->columns <= column + 1) {
+    myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  }
+  //Si la posicion es valida devolvemos su contenido
+  miTablero->tablero[row+1][column+1] = value;
+}
+```
+Ademas, antes de cada acceso a la matriz validamos que es correcto y si no es asi, llamamos a la macro, myError, que concatena un print con un mensaje de error y un traceback de llamadas con un exit.

@@ -73,10 +73,11 @@ int getMaxcolumn(tablero* miTablero) {
   return miTablero->columns;
 }
 
-void leerFichero(tablero *miTablero, std::ifstream fichero) {
+void inicializarTablero(tablero *miTablero, std::ifstream fichero) {
   if(!fichero.is_open()) {
     myError("El ifstream proporcionado no ha sido inicializado correctamente, stackTrace : %s", __FUNCTION__);
   }
+
 }
 
 //Imprimimos el tablero actual
