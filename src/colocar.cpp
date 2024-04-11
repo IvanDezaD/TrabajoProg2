@@ -77,12 +77,6 @@ void leerFichero(tablero *miTablero, std::ifstream fichero) {
   if(!fichero.is_open()) {
     myError("El ifstream proporcionado no ha sido inicializado correctamente, stackTrace : %s", __FUNCTION__);
   }
-  
-  int value;
-  while((value = getchar()) != EOF){
-    
-    
-  }
 }
 
 //Imprimimos el tablero actual
