@@ -14,7 +14,7 @@
 
 //TODO: quedan por hacer las especificaciones formales.
 //TODO: revisar funciones
-//TODO: quedan por implementar: estaResuelto y esCorrecto.
+//TODO: quedan por implementar: estaResuelto(redundante pero para verificar) y esCorrecto. 
 
 /*----Nuestra estructura tablero-----*/
 typedef struct {

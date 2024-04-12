@@ -185,6 +185,24 @@ int cuantosVeoInferior(tablero *miTablero, int column) {
 
 //NOTE: Con las coordenadas sacar la direccion(cual de las 4 posibles funciones usar)
 int cuantosVeo(tablero *miTablero, int row, int column) {
+  if(row == 0) {
+    return cuantosVeoSuperior(&miTablero, column);
+  }
+  //Si no es 0, deberia ser columnas
+  else if(row = miTablero->rows+1) {
+    return cuantosVeoInferior(&miTablero, column);
+  }
+  if(column == 0) {
+    return cuantosVeoIzda(&miTablero, fila),
+  }
+  else {
+  return cuantosVeoDcha(&miTablero, fila)
+  }
+}
+
+bool esCorrecto(tablero *miTablero, int row, int column, int value) {
+  //Convertir de coordenadas a puntos que verificar.
+  //NOTE: Si es la ultima fila o la ultima columna devolvemos true si y solo si, el numero que veo es IGUAL al especificado
   
 }
 
