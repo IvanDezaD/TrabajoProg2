@@ -124,8 +124,8 @@ void imprimirTablero(tablero *miTablero) {
 }
 
 int cuantosVeoIzda(int vector[], int size) {
-  int maximo = vector[0];
-  int veo = 0;
+  int maximo = vector[1];
+  int veo = 1;
   for(int i = 1; i < size; i++) {
     if(vector[i] > maximo) {
       maximo = vector[i];
@@ -139,8 +139,8 @@ int cuantosVeoIzda(int vector[], int size) {
 }
 
 int cuantosVeoDcha(int vector[], int size) {
-  int max = vector[size-1];
-  int veo = 0;
+  int max = vector[size-2];
+  int veo = 1;
   for(int i = size-2; i <= 0; i--) {
     if(vector[i] > max) {
       max = vector[i];
@@ -154,8 +154,8 @@ int cuantosVeoDcha(int vector[], int size) {
 }
 
 int cuantosVeoSuperior(tablero *miTablero, int column) {
-  int max = miTablero->tablero[0][column];
-  int veo = 0;
+  int max = miTablero->tablero[1][column];
+  int veo = 1;
   for(int i = 1; i < miTablero->rows; i++) {
     if(miTablero->tablero[i][0] > max) {
       max = miTablero->tablero[i][column];
@@ -169,9 +169,9 @@ int cuantosVeoSuperior(tablero *miTablero, int column) {
 }
 
 int cuantosVeoInferior(tablero *miTablero, int column) {
-  int max = miTablero->tablero[0][column];
-  int veo = 0;
-  for(int i = 1; i < miTablero->rows; i++) {
+  int max = miTablero->tablero[miTablero->rows][column];
+  int veo = 1;
+  for(int i = miTablero->rows-1; i < miTablero->rows; i--) {
     if(miTablero->tablero[i][0] > max) {
       max = miTablero->tablero[i][column];
       veo = i;
