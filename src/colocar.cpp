@@ -189,14 +189,14 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
     return cuantosVeoSuperior(&miTablero, column);
   }
   //Si no es 0, deberia ser columnas
-  else if(row = miTablero->rows+1) {
+  else if(row == miTablero->rows+1) {
     return cuantosVeoInferior(&miTablero, column);
   }
   if(column == 0) {
-    return cuantosVeoIzda(&miTablero, fila),
+    return cuantosVeoIzda(&miTablero, row),
   }
   else {
-  return cuantosVeoDcha(&miTablero, fila)
+  return cuantosVeoDcha(&miTablero, row);
   }
 }
 
