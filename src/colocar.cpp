@@ -1,6 +1,7 @@
 /*
- *  Fichero que contiene la impementacion de las funciones definidas en colocar.h
+ *  Fichero que contiene la implementacion de las funciones definidas en colocar.h
  *  Por Ivan Deza y David Hudrea
+ *  13 Apr 2024
  * 
  */
 #include "colocar.h"
@@ -126,7 +127,7 @@ void imprimirTablero(tablero *miTablero) {
 int cuantosVeoIzda(int vector[], int size) {
   int maximo = vector[1];
   int veo = 1;
-  for(int i = 1; i < size; i++) {
+  for(int i = 1; i <= size; i++) {
     if(vector[i] > maximo) {
       maximo = vector[i];
       veo = i;
@@ -156,11 +157,11 @@ int cuantosVeoDcha(int vector[], int size) {
 int cuantosVeoSuperior(tablero *miTablero, int column) {
   int max = miTablero->tablero[1][column];
   int veo = 1;
-  for(int i = 1; i < miTablero->rows; i++) {
-    if(miTablero->tablero[i][0] > max) {
+  for(int i = 1; i <= miTablero->rows; i++) {
+    if(miTablero->tablero[i][column] > max) {
       max = miTablero->tablero[i][column];
       veo = i;
-      if(i < miTablero->rows && miTablero->tablero[i][0] > miTablero->tablero[i+1][0]) {
+      if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
         return veo;
       }
     }
@@ -183,33 +184,38 @@ int cuantosVeoInferior(tablero *miTablero, int column) {
   return veo;
 }
 
+//TODO:Añadir sanitizacion de entrada y loguear errores
 //NOTE: Con las coordenadas sacar la direccion(cual de las 4 posibles funciones usar)
 int cuantosVeo(tablero *miTablero, int row, int column) {
+  info("Calculando cuantos veo desde la posición %d, %d!", row, column);
   if(row == 0) {
-    return cuantosVeoSuperior(&miTablero, column);
+    return cuantosVeoSuperior(miTablero, column);
   }
   //Si no es 0, deberia ser columnas
   else if(row == miTablero->rows+1) {
-    return cuantosVeoInferior(&miTablero, column);
+    return cuantosVeoInferior(miTablero, column);
   }
   if(column == 0) {
-    return cuantosVeoIzda(&miTablero, row),
+    return cuantosVeoIzda(miTablero->tablero[row], miTablero->columns);
   }
   else {
-  return cuantosVeoDcha(&miTablero, row);
+  return cuantosVeoDcha(miTablero->tablero[row], miTablero->columns);
   }
 }
 
 bool esCorrecto(tablero *miTablero, int row, int column, int value) {
   //Convertir de coordenadas a puntos que verificar.
   //NOTE: Si es la ultima fila o la ultima columna devolvemos true si y solo si, el numero que veo es IGUAL al especificado
-  
+  info("Calculando si el haber puesto: %d en %d, %d permite seguir resolviendo el tablero!", value, row, column);
+  return true;
 }
 
 //Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)
 void tests(void) {
-  printf("Iniciando tests");
+  info("Iniciando tests!");
   tablero miTablero;
-  inicializarTablero(&miTablero, "tests/test1.txt");
+  inicializarTablero(&miTablero, "tests/test2.txt");
+  int veo = cuantosVeo(&miTablero, 1, 0);
+  info("Se ven: %d", veo);
   imprimirTablero(&miTablero);
 }
