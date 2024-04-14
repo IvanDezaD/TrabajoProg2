@@ -215,7 +215,7 @@ void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   inicializarTablero(&miTablero, "tests/test2.txt");
-  int veo = cuantosVeo(&miTablero, 1, 0);
+  int veo = cuantosVeo(&miTablero, 1, 5);
   info("Se ven: %d", veo);
   imprimirTablero(&miTablero);
 }

@@ -59,3 +59,6 @@ void imprimirTablero(tablero *miTablero);
 
 //funcion para podere hacer pruebas de desarrollo
 void tests(void);
+
+//Funcion usada par a mostrar una barra de carga por pantalla: [===>=]msg
+void updateProgressBar(const char* msg);
