@@ -1,4 +1,5 @@
 #pragma once
+#pragma GCC optimize("O3")
 #include "colocar.h"
 #include "log.h"
 #include <cstdio>
