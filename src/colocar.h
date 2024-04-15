@@ -34,10 +34,10 @@ void colocarValor(tablero *miTablero, int row, int column,int value);
 int cuantosVeo(tablero miTablero, int row, int column);
 
 //recibimos el tablero y la casilla que acabamos de colocar y devolvemos true si y solo si el movimiento ha sido valido (no fastidia lo de las alturas).
-bool esCorrecto(tablero* miTablero, int row, int column);
+bool esCorrecto(tablero* miTablero, int row, int column, int value);
 
 //Recibimos un tablero, y devolvemos si esta resuelto o no.
-bool estaResuelto(tablero miTablero);
+bool estaResuelto(tablero *miTablero);
 
 //Recibimos el tablero y unas coordenadas y devolvemos la altura de esa manzana
 int valorEnCordenada(tablero *miTablero, int row, int column); //return miTablero->tablero[row][column]

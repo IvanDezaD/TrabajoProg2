@@ -172,11 +172,11 @@ int cuantosVeoSuperior(tablero *miTablero, int column) {
 int cuantosVeoInferior(tablero *miTablero, int column) {
   int max = miTablero->tablero[miTablero->rows][column];
   int veo = 1;
-  for(int i = miTablero->rows-1; i < miTablero->rows; i--) {
-    if(miTablero->tablero[i][0] > max) {
+  for(int i = miTablero->rows-1; i <= 0; i--) {
+    if(miTablero->tablero[i][column] > max) {
       max = miTablero->tablero[i][column];
       veo = i;
-      if(i < miTablero->rows && miTablero->tablero[i][0] > miTablero->tablero[i+1][0]) {
+      if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
         return veo;
       }
     }
@@ -206,7 +206,27 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
 bool esCorrecto(tablero *miTablero, int row, int column, int value) {
   //Convertir de coordenadas a puntos que verificar.
   //NOTE: Si es la ultima fila o la ultima columna devolvemos true si y solo si, el numero que veo es IGUAL al especificado
+  
+  if (cuantosVeo(miTablero, row, column) == value) {
+    return true;
+  }
+  else {
+    return false;
+  }
+  
   info("Calculando si el haber puesto: %d en %d, %d permite seguir resolviendo el tablero!", value, row, column);
+  
+}
+//Verificamos si el tablero esta resuelto
+//NOTE: Si hay un 0 en el tablero, no esta resuelto
+bool estaResuelto(tablero *miTablero) {
+  for(int i = 1; i < miTablero->rows+1; i++) {
+    for(int j = 1; j < miTablero->columns+1; j++) {
+      if(miTablero->tablero[i][j] == 0) {
+        return false;
+      }
+    }
+  }
   return true;
 }
 
