@@ -125,6 +125,7 @@ void imprimirTablero(tablero *miTablero) {
 }
 
 int cuantosVeoIzda(int vector[], int size) {
+  info("Izda!");
   int maximo = vector[1];
   int veo = 1;
   for(int i = 1; i <= size; i++) {
@@ -140,12 +141,13 @@ int cuantosVeoIzda(int vector[], int size) {
 }
 
 int cuantosVeoDcha(int vector[], int size) {
-  int max = vector[size-2];
+  info("Dcha!");
+  int max = vector[size];
   int veo = 1;
-  for(int i = size-2; i <= 0; i--) {
+  for(int i = vector[size-1]; i >= 0; i--) {
     if(vector[i] > max) {
       max = vector[i];
-      veo = i;
+      veo++;
       if(i < size && vector[i] > vector[i+1]) {
         return veo;
       }
@@ -155,6 +157,7 @@ int cuantosVeoDcha(int vector[], int size) {
 }
 
 int cuantosVeoSuperior(tablero *miTablero, int column) {
+  info("Superior!");
   int max = miTablero->tablero[1][column];
   int veo = 1;
   for(int i = 1; i <= miTablero->rows; i++) {
@@ -170,13 +173,14 @@ int cuantosVeoSuperior(tablero *miTablero, int column) {
 }
 
 int cuantosVeoInferior(tablero *miTablero, int column) {
+  info("Inferior!");
   int max = miTablero->tablero[miTablero->rows][column];
   int veo = 1;
-  for(int i = miTablero->rows-1; i < miTablero->rows; i--) {
+  for(int i = miTablero->rows-1; i >= 0; i--) {
     if(miTablero->tablero[i][0] > max) {
       max = miTablero->tablero[i][column];
-      veo = i;
-      if(i < miTablero->rows && miTablero->tablero[i][0] > miTablero->tablero[i+1][0]) {
+      veo++;
+      if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
         return veo;
       }
     }
@@ -198,9 +202,11 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
   if(column == 0) {
     return cuantosVeoIzda(miTablero->tablero[row], miTablero->columns);
   }
-  else {
+  else if(column == miTablero->columns+1) {
   return cuantosVeoDcha(miTablero->tablero[row], miTablero->columns);
   }
+  //Es un error;
+  return -1;
 }
 
 bool esCorrecto(tablero *miTablero, int row, int column, int value) {
@@ -210,12 +216,13 @@ bool esCorrecto(tablero *miTablero, int row, int column, int value) {
   return true;
 }
 
+//TODO:probar a fondo las funciones cuantasVeo
 //Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)
 void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   inicializarTablero(&miTablero, "tests/test2.txt");
-  int veo = cuantosVeo(&miTablero, 1, 5);
+  int veo = cuantosVeo(&miTablero, 0, 2);
   info("Se ven: %d", veo);
   imprimirTablero(&miTablero);
 }
