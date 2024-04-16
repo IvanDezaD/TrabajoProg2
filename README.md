@@ -85,7 +85,7 @@ En un principio el tablero aparentemente, es 3x3 pero tal y como hemos decidido 
                            |  |  |  |  |  |
                            +--+--+--+--+--+
 ```
-Queríamos hacer que tu desde la funcion que resuekve el tablero no te tuvieras que preocupar por las 2 filas y columnas extra y se tratara como una matrix NxM. Para ello en cada funcion de acceso a la matriz, ya sea para leer o para cambiar se le suma 1 al valor de coordenadas recibido.
+Queríamos hacer que tu desde la funcion que resuelve el tablero no te tuvieras que preocupar por las 2 filas y columnas extra y se tratara como una matrix NxM. Para ello en cada funcion de acceso a la matriz, ya sea para leer o para cambiar se le suma 1 al valor de coordenadas recibido.
 ```c
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
