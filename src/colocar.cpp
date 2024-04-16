@@ -222,6 +222,9 @@ void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   inicializarTablero(&miTablero, "tests/test2.txt");
+  if(esCorrecto(&miTablero, 4, 1, 4) && esCorrecto(&miTablero, 1, 4, 1) && esCorrecto(&miTablero, 2, 2, 4)) {
+    okay("La funcion valido correctamente");
+  }
   int veo = cuantosVeo(&miTablero, 0, 2);
   info("Se ven: %d", veo);
   imprimirTablero(&miTablero);
