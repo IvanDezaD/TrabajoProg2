@@ -125,6 +125,7 @@ void imprimirTablero(tablero *miTablero) {
 }
 
 int cuantosVeoIzda(int vector[], int size) {
+  info("Izda!");
   int maximo = vector[1];
   int veo = 1;
   for(int i = 1; i <= size; i++) {
@@ -140,12 +141,13 @@ int cuantosVeoIzda(int vector[], int size) {
 }
 
 int cuantosVeoDcha(int vector[], int size) {
-  int max = vector[size-2];
+  info("Dcha!");
+  int max = vector[size];
   int veo = 1;
-  for(int i = size-2; i <= 0; i--) {
+  for(int i = vector[size-1]; i >= 0; i--) {
     if(vector[i] > max) {
       max = vector[i];
-      veo = i;
+      veo++;
       if(i < size && vector[i] > vector[i+1]) {
         return veo;
       }
@@ -155,6 +157,7 @@ int cuantosVeoDcha(int vector[], int size) {
 }
 
 int cuantosVeoSuperior(tablero *miTablero, int column) {
+  info("Superior!");
   int max = miTablero->tablero[1][column];
   int veo = 1;
   for(int i = 1; i <= miTablero->rows; i++) {
@@ -170,12 +173,13 @@ int cuantosVeoSuperior(tablero *miTablero, int column) {
 }
 
 int cuantosVeoInferior(tablero *miTablero, int column) {
+  info("Inferior!");
   int max = miTablero->tablero[miTablero->rows][column];
   int veo = 1;
-  for(int i = miTablero->rows-1; i <= 0; i--) {
-    if(miTablero->tablero[i][column] > max) {
+  for(int i = miTablero->rows-1; i >= 0; i--) {
+    if(miTablero->tablero[i][0] > max) {
       max = miTablero->tablero[i][column];
-      veo = i;
+      veo++;
       if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
         return veo;
       }
@@ -198,31 +202,63 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
   if(column == 0) {
     return cuantosVeoIzda(miTablero->tablero[row], miTablero->columns);
   }
-  else {
+  else if(column == miTablero->columns+1) {
   return cuantosVeoDcha(miTablero->tablero[row], miTablero->columns);
   }
+  //Es un error;
+  return -1;
 }
+
+//NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
+bool filaCompleta(tablero *miTablero, int row) {
+  for(int i = 1; i < miTablero->columns+1; i++) {
+    if(miTablero->tablero[row][i] == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+//NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
+bool columnaCompleta(tablero *miTablero, int column) {
+  for(int i = 1; i < miTablero->rows+1; i++) {
+    if(miTablero->tablero[i][column] == 0) {
+      return false;
+    }
+  }
+  return true;
+} 
+
 
 bool esCorrecto(tablero *miTablero, int row, int column, int value) {
   //Convertir de coordenadas a puntos que verificar.
   //NOTE: Si es la ultima fila o la ultima columna devolvemos true si y solo si, el numero que veo es IGUAL al especificado
-  
-  if (cuantosVeo(miTablero, row, column) == value) {
-    return true;
+  info("Calculando si el haber puesto: %d en %d, %d permite seguir resolviendo el tablero!", value, row, column);
+  int top = cuantosVeo(miTablero, 0, column);
+  int bottom = cuantosVeo(miTablero, miTablero->rows+1, column);
+  int left = cuantosVeo(miTablero, row, 0);
+  int right = cuantosVeo(miTablero, row, miTablero->columns+1);
+  if (!filaCompleta(miTablero, row) || !columnaCompleta(miTablero, column)) {
+    if(top <=valorEnCordenada(miTablero, 0, column) && bottom <= valorEnCordenada(miTablero, miTablero->rows+1, column) && left <= valorEnCordenada(miTablero, row, 0) && right <= valorEnCordenada(miTablero, row, miTablero->columns+1)) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   else {
-    return false;
+    if(top == valorEnCordenada(miTablero, 0, column) && bottom == valorEnCordenada(miTablero, miTablero->rows+1, column) && left == valorEnCordenada(miTablero, row, 0) && right == valorEnCordenada(miTablero, row, miTablero->columns+1)) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-  
-  info("Calculando si el haber puesto: %d en %d, %d permite seguir resolviendo el tablero!", value, row, column);
-  
 }
-//Verificamos si el tablero esta resuelto
-//NOTE: Si hay un 0 en el tablero, no esta resuelto
-bool estaResuelto(tablero *miTablero) {
+bool estaResuelto(tablero *miTablero){
   for(int i = 1; i < miTablero->rows+1; i++) {
     for(int j = 1; j < miTablero->columns+1; j++) {
-      if(miTablero->tablero[i][j] == 0) {
+      if(!esCorrecto(miTablero, i, j, miTablero->tablero[i][j])) {
         return false;
       }
     }
@@ -230,12 +266,17 @@ bool estaResuelto(tablero *miTablero) {
   return true;
 }
 
+  
+//TODO:probar a fondo las funciones cuantasVeo
 //Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)
 void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   inicializarTablero(&miTablero, "tests/test2.txt");
-  int veo = cuantosVeo(&miTablero, 1, 5);
+  if(esCorrecto(&miTablero, 4, 1, 4) && esCorrecto(&miTablero, 1, 4, 1) && esCorrecto(&miTablero, 2, 2, 4)) {
+    okay("La funcion valido correctamente");
+  }
+  int veo = cuantosVeo(&miTablero, 0, 2);
   info("Se ven: %d", veo);
   imprimirTablero(&miTablero);
 }
