@@ -50,9 +50,9 @@ void colocarValor(tablero *miTablero, int row, int column, int value) {
 int valorEnCordenada(tablero *miTablero, int row, int column) {
   info("Obteniendo valor de las coordenadas : %d, %d", row, column);
   //Mandar error si intentamos acceder a una direccion de memoria fuera de rango (invalida, ya que hay mas direcciones validas que no son visibles)
-  if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
-     myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
-  }
+  //if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
+  //   myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  //}
   return miTablero->tablero[row][column];
 }
 
@@ -211,22 +211,13 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
 
 //NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
 bool filaCompleta(tablero *miTablero, int row) {
-  for(int i = 1; i < miTablero->columns+1; i++) {
-    if(miTablero->tablero[row][i] == 0) {
-      return false;
-    }
-  }
-  return true;
+  info("Comprobando si la fila esta llena");
+  return miTablero->tablero[miTablero->columns+1][row] != 0;
 }
 
 //NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
 bool columnaCompleta(tablero *miTablero, int column) {
-  for(int i = 1; i < miTablero->rows+1; i++) {
-    if(miTablero->tablero[i][column] == 0) {
-      return false;
-    }
-  }
-  return true;
+  return miTablero->tablero[miTablero->rows+1][column] != 0;
 } 
 
 
@@ -251,6 +242,7 @@ bool esCorrecto(tablero *miTablero, int row, int column, int value) {
       return true;
     }
     else {
+      info("No es valido el movimiento!");
       return false;
     }
   }
