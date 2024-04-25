@@ -50,9 +50,9 @@ void colocarValor(tablero *miTablero, int row, int column, int value) {
 int valorEnCordenada(tablero *miTablero, int row, int column) {
   info("Obteniendo valor de las coordenadas : %d, %d", row, column);
   //Mandar error si intentamos acceder a una direccion de memoria fuera de rango (invalida, ya que hay mas direcciones validas que no son visibles)
-  if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
-     myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
-  }
+  //if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
+  //   myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  //}
   return miTablero->tablero[row][column];
 }
 
@@ -209,10 +209,52 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
   return -1;
 }
 
+//NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
+bool filaCompleta(tablero *miTablero, int row) {
+  info("Comprobando si la fila esta llena");
+  return miTablero->tablero[miTablero->columns+1][row] != 0;
+}
+
+//NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
+bool columnaCompleta(tablero *miTablero, int column) {
+  return miTablero->tablero[miTablero->rows+1][column] != 0;
+} 
+
+
 bool esCorrecto(tablero *miTablero, int row, int column, int value) {
   //Convertir de coordenadas a puntos que verificar.
   //NOTE: Si es la ultima fila o la ultima columna devolvemos true si y solo si, el numero que veo es IGUAL al especificado
   info("Calculando si el haber puesto: %d en %d, %d permite seguir resolviendo el tablero!", value, row, column);
+  int top = cuantosVeo(miTablero, 0, column);
+  int bottom = cuantosVeo(miTablero, miTablero->rows+1, column);
+  int left = cuantosVeo(miTablero, row, 0);
+  int right = cuantosVeo(miTablero, row, miTablero->columns+1);
+  if (!filaCompleta(miTablero, row) || !columnaCompleta(miTablero, column)) {
+    if(top <=valorEnCordenada(miTablero, 0, column) && bottom <= valorEnCordenada(miTablero, miTablero->rows+1, column) && left <= valorEnCordenada(miTablero, row, 0) && right <= valorEnCordenada(miTablero, row, miTablero->columns+1)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  else {
+    if(top == valorEnCordenada(miTablero, 0, column) && bottom == valorEnCordenada(miTablero, miTablero->rows+1, column) && left == valorEnCordenada(miTablero, row, 0) && right == valorEnCordenada(miTablero, row, miTablero->columns+1)) {
+      return true;
+    }
+    else {
+      info("No es valido el movimiento!");
+      return false;
+    }
+  }
+}
+bool estaResuelto(tablero *miTablero){
+  for(int i = 1; i < miTablero->rows+1; i++) {
+    for(int j = 1; j < miTablero->columns+1; j++) {
+      if(!esCorrecto(miTablero, i, j, miTablero->tablero[i][j])) {
+        return false;
+      }
+    }
+  }
   return true;
 }
 
