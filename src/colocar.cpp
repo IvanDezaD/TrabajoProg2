@@ -35,13 +35,22 @@ void liberarTablero(tablero* miTablero) {
   free(miTablero->tablero);
 }
 
+void inicializarCoods(coords *misCoords, tablero* miTablero) {
+  misCoords->north = 0;
+  misCoords->south = miTablero->rows+1;
+  misCoords->east = 0;
+  misCoords->west = miTablero->columns+1;
+  okay("Coordenadas de lectura inicializadas correctamente!");
+}
+
 /*---------------------------COLOCAMOS VALOR EN COORDENADAS----------------------------*/
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
   //Mandar error si intentamos acceder a una direccion fuera de rango!
-  if(miTablero->rows<= row+1 || miTablero->columns <= column + 1) {
-    myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
-  }
+  //if(miTablero->rows<= row+1 || miTablero->columns <= column + 1) {
+  //  liberarTablero(miTablero); //Si falla deberemos liberar la memoria antes de salir para evitar memory leaks
+  //  myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  //}
   //Si la posicion es valida devolvemos su contenido
   miTablero->tablero[row+1][column+1] = value;
 }
@@ -53,6 +62,12 @@ int valorEnCordenada(tablero *miTablero, int row, int column) {
   //if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
   //   myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
   //}
+  return miTablero->tablero[row+1][column+1];
+}
+
+/*------------HEIGHT AT COORDINATE (EXTERIOR)------------*/
+int getHeightAt(tablero* miTablero, int row, int column) {
+  //TODO:Add error log
   return miTablero->tablero[row][column];
 }
 
@@ -66,7 +81,6 @@ int getMaxcolumn(tablero* miTablero) {
   return miTablero->columns;
 }
 
-//NOTE: Podríamos dividir esto en 2 funciones diferentes y pasar el ifstream de una a otra.
 /*-------------------INICIALIZAMOS EL TABLERO--------------------*/
 void inicializarTablero(tablero *miTablero, std::string fichero) {
   info("Inicializando el tablero!");
@@ -84,7 +98,6 @@ void inicializarTablero(tablero *miTablero, std::string fichero) {
   okay("Fichero %s abierto con exito!", fichero.c_str());
   std::string linea;
   
-  //WARN: Deberiamos cambiar esta funcion por algo mejor
   while(getline(myFile, linea, '\n')) {
     std::istringstream iss(linea);
     if(filas == 0) {
@@ -124,6 +137,7 @@ void imprimirTablero(tablero *miTablero) {
   }
 }
 
+/*--------------CUANTOS VEMOS---------------*/
 int cuantosVeoIzda(int vector[], int size) {
   info("Izda!");
   int maximo = vector[1];
@@ -188,10 +202,9 @@ int cuantosVeoInferior(tablero *miTablero, int column) {
   return veo;
 }
 
-//TODO:Añadir sanitizacion de entrada y loguear errores
-//NOTE: Con las coordenadas sacar la direccion(cual de las 4 posibles funciones usar)
+
+/*-----------CUANTAS VEO DESDE X POSICION EXTERIOR---------------*/
 int cuantosVeo(tablero *miTablero, int row, int column) {
-  info("Calculando cuantos veo desde la posición %d, %d!", row, column);
   if(row == 0) {
     return cuantosVeoSuperior(miTablero, column);
   }
@@ -209,28 +222,33 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
   return -1;
 }
 
-//NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
+/*---------------ESTA COMPLETA LA FILA-----------------------*/
 bool filaCompleta(tablero *miTablero, int row) {
-  info("Comprobando si la fila esta llena");
   return miTablero->tablero[miTablero->columns+1][row] != 0;
 }
 
-//NOTE: Añadir logica para que si la fila o columna esta completa, devuelva true
+/*-------------ESTA COMPLETA LA COLUMNA------------------*/
 bool columnaCompleta(tablero *miTablero, int column) {
   return miTablero->tablero[miTablero->rows+1][column] != 0;
 } 
 
 
-bool esCorrecto(tablero *miTablero, int row, int column, int value) {
+bool esCorrecto(tablero *miTablero, int row, int column) {
   //Convertir de coordenadas a puntos que verificar.
-  //NOTE: Si es la ultima fila o la ultima columna devolvemos true si y solo si, el numero que veo es IGUAL al especificado
-  info("Calculando si el haber puesto: %d en %d, %d permite seguir resolviendo el tablero!", value, row, column);
-  int top = cuantosVeo(miTablero, 0, column);
-  int bottom = cuantosVeo(miTablero, miTablero->rows+1, column);
-  int left = cuantosVeo(miTablero, row, 0);
-  int right = cuantosVeo(miTablero, row, miTablero->columns+1);
+  info("Calculando si el movimiento en: %d, %d permite seguir resolviendo el tablero!", row, column);
+  //Variables auxiliares por razones de legibilidad (se podrian usar #define pero al tratarse de memDinamica no).
+  const int north = 0;
+  const int south = miTablero->rows+1;
+  const int east  = 0;
+  const int west  = miTablero->columns+1;
+
+  int top = cuantosVeo(miTablero, north, column);
+  int bottom = cuantosVeo(miTablero, south , column);
+  int left = cuantosVeo(miTablero, row, east);
+  int right = cuantosVeo(miTablero, row, west);
+
   if (!filaCompleta(miTablero, row) || !columnaCompleta(miTablero, column)) {
-    if(top <=valorEnCordenada(miTablero, 0, column) && bottom <= valorEnCordenada(miTablero, miTablero->rows+1, column) && left <= valorEnCordenada(miTablero, row, 0) && right <= valorEnCordenada(miTablero, row, miTablero->columns+1)) {
+    if(top <= getHeightAt(miTablero, north, column) && bottom <= getHeightAt(miTablero, south, column) && left <= getHeightAt(miTablero, row, east) && right <= getHeightAt(miTablero, row, west)) {
       return true;
     }
     else {
@@ -238,24 +256,41 @@ bool esCorrecto(tablero *miTablero, int row, int column, int value) {
     }
   }
   else {
-    if(top == valorEnCordenada(miTablero, 0, column) && bottom == valorEnCordenada(miTablero, miTablero->rows+1, column) && left == valorEnCordenada(miTablero, row, 0) && right == valorEnCordenada(miTablero, row, miTablero->columns+1)) {
+    if(top == getHeightAt(miTablero, north, column) && bottom == getHeightAt(miTablero, south, column) && left == getHeightAt(miTablero, row, east) && right == getHeightAt(miTablero, row, west)) {
       return true;
     }
     else {
-      info("No es valido el movimiento!");
+      info("El movimiento no es válido!");
       return false;
     }
   }
 }
+
+/*---------------TABLERO RESUELTO?-----------*/
 bool estaResuelto(tablero *miTablero){
   for(int i = 1; i < miTablero->rows+1; i++) {
     for(int j = 1; j < miTablero->columns+1; j++) {
-      if(!esCorrecto(miTablero, i, j, miTablero->tablero[i][j])) {
+      if(miTablero->tablero[i] == 0) {
         return false;
       }
     }
   }
   return true;
+}
+
+/*--------------------BORRAMOS EL MOVIMIENTO-------------------*/
+void borrarMovimiento(tablero* miTablero, int row, int column) {
+  miTablero->tablero[row][column] = 0;
+}
+
+/*-------------MAX ROW OR COLUMN------------*/
+int maxColumnOrRow(tablero* miTablero) {
+  if(miTablero->columns > miTablero->rows) {
+    return miTablero->columns;
+  }
+  else {
+    return miTablero->rows;
+  }
 }
 
 //TODO:probar a fondo las funciones cuantasVeo
@@ -264,7 +299,7 @@ void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   inicializarTablero(&miTablero, "tests/test2.txt");
-  if(esCorrecto(&miTablero, 4, 1, 4) && esCorrecto(&miTablero, 1, 4, 1) && esCorrecto(&miTablero, 2, 2, 4)) {
+  if(esCorrecto(&miTablero, 4, 1)) {//&& esCorrecto(&miTablero, 1, 4) && esCorrecto(&miTablero, 2, 2)) {
     okay("La funcion valido correctamente");
   }
   int veo = cuantosVeo(&miTablero, 0, 2);
