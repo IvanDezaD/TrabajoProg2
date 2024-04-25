@@ -40,24 +40,22 @@ void inicializarCoods(coords *misCoords, tablero* miTablero) {
   misCoords->south = miTablero->rows+1;
   misCoords->east = 0;
   misCoords->west = miTablero->columns+1;
-  okay("Coordenadas de lectura inicializadas correctamente!");
 }
 
 /*---------------------------COLOCAMOS VALOR EN COORDENADAS----------------------------*/
 void colocarValor(tablero *miTablero, int row, int column, int value) {
-  info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
   //Mandar error si intentamos acceder a una direccion fuera de rango!
   //if(miTablero->rows<= row+1 || miTablero->columns <= column + 1) {
   //  liberarTablero(miTablero); //Si falla deberemos liberar la memoria antes de salir para evitar memory leaks
   //  myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
   //}
   //Si la posicion es valida devolvemos su contenido
+  info("Colocando valor: %d en %d, %d", value, row+1, column+1)
   miTablero->tablero[row+1][column+1] = value;
 }
 
 /*--------------------QUE VALOR HAY EN LAS COORDENADAS ESPECIFICADAS--------------------*/
 int valorEnCordenada(tablero *miTablero, int row, int column) {
-  info("Obteniendo valor de las coordenadas : %d, %d", row, column);
   //Mandar error si intentamos acceder a una direccion de memoria fuera de rango (invalida, ya que hay mas direcciones validas que no son visibles)
   //if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
   //   myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
@@ -139,13 +137,12 @@ void imprimirTablero(tablero *miTablero) {
 
 /*--------------CUANTOS VEMOS---------------*/
 int cuantosVeoIzda(int vector[], int size) {
-  info("Izda!");
   int maximo = vector[1];
   int veo = 1;
   for(int i = 1; i <= size; i++) {
     if(vector[i] > maximo) {
       maximo = vector[i];
-      veo = i;
+      veo++;
       if(i < size && vector[i] > vector[i+1]) {
         return veo;
       }
@@ -155,29 +152,29 @@ int cuantosVeoIzda(int vector[], int size) {
 }
 
 int cuantosVeoDcha(int vector[], int size) {
-  info("Dcha!");
   int max = vector[size];
   int veo = 1;
-  for(int i = vector[size-1]; i >= 0; i--) {
+  for(int i = size; i > 0; i--) {
+    info("%d, > %d", vector[i], max);
     if(vector[i] > max) {
       max = vector[i];
       veo++;
-      if(i < size && vector[i] > vector[i+1]) {
+      if(i > 0 && vector[i] > vector[i-1]) {
         return veo;
       }
     }
   }
+  info("veo: %d", veo);
   return veo;
 }
 
 int cuantosVeoSuperior(tablero *miTablero, int column) {
-  info("Superior!");
   int max = miTablero->tablero[1][column];
   int veo = 1;
   for(int i = 1; i <= miTablero->rows; i++) {
     if(miTablero->tablero[i][column] > max) {
       max = miTablero->tablero[i][column];
-      veo = i;
+      veo++;
       if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
         return veo;
       }
@@ -187,14 +184,13 @@ int cuantosVeoSuperior(tablero *miTablero, int column) {
 }
 
 int cuantosVeoInferior(tablero *miTablero, int column) {
-  info("Inferior!");
-  int max = miTablero->tablero[miTablero->rows][column];
+  int max = miTablero->tablero[miTablero->rows+1][column];
   int veo = 1;
-  for(int i = miTablero->rows-1; i >= 0; i--) {
-    if(miTablero->tablero[i][0] > max) {
+  for(int i = miTablero->rows; i > 0; i--) {
+    if(miTablero->tablero[i][column] > max) {
       max = miTablero->tablero[i][column];
       veo++;
-      if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
+      if(i < 0 && miTablero->tablero[i][column] > miTablero->tablero[i-1][column]) {
         return veo;
       }
     }
@@ -202,7 +198,7 @@ int cuantosVeoInferior(tablero *miTablero, int column) {
   return veo;
 }
 
-
+//NOTE:FIX THIS SHIT
 /*-----------CUANTAS VEO DESDE X POSICION EXTERIOR---------------*/
 int cuantosVeo(tablero *miTablero, int row, int column) {
   if(row == 0) {
@@ -235,20 +231,21 @@ bool columnaCompleta(tablero *miTablero, int column) {
 
 bool esCorrecto(tablero *miTablero, int row, int column) {
   //Convertir de coordenadas a puntos que verificar.
-  info("Calculando si el movimiento en: %d, %d permite seguir resolviendo el tablero!", row, column);
   //Variables auxiliares por razones de legibilidad (se podrian usar #define pero al tratarse de memDinamica no).
   const int north = 0;
   const int south = miTablero->rows+1;
-  const int east  = 0;
-  const int west  = miTablero->columns+1;
+  const int west  = 0;
+  const int east  = miTablero->columns+1;
 
   int top = cuantosVeo(miTablero, north, column);
   int bottom = cuantosVeo(miTablero, south , column);
-  int left = cuantosVeo(miTablero, row, east);
-  int right = cuantosVeo(miTablero, row, west);
+  int left = cuantosVeo(miTablero, row, west);
+  int right = cuantosVeo(miTablero, row, east);
+
+  info("top: %d,bottom: %d, left: %d, right: %d ", top, bottom, left, right);
 
   if (!filaCompleta(miTablero, row) || !columnaCompleta(miTablero, column)) {
-    if(top <= getHeightAt(miTablero, north, column) && bottom <= getHeightAt(miTablero, south, column) && left <= getHeightAt(miTablero, row, east) && right <= getHeightAt(miTablero, row, west)) {
+    if(top <= getHeightAt(miTablero, north, column) && bottom <= getHeightAt(miTablero, south, column) && left <= getHeightAt(miTablero, row, west) && right <= getHeightAt(miTablero, row, east)) {
       return true;
     }
     else {
@@ -270,7 +267,7 @@ bool esCorrecto(tablero *miTablero, int row, int column) {
 bool estaResuelto(tablero *miTablero){
   for(int i = 1; i < miTablero->rows+1; i++) {
     for(int j = 1; j < miTablero->columns+1; j++) {
-      if(miTablero->tablero[i] == 0) {
+      if(miTablero->tablero[i][j] == 0) {
         return false;
       }
     }
@@ -293,16 +290,41 @@ int maxColumnOrRow(tablero* miTablero) {
   }
 }
 
+void updateProgressBar(const char* msg) {
+    static const char animation[] = {'>', '=', '=', '=', '=', '=', '=', '='};
+    static int index = 0;
+    printf("\r\033[1;34m[%c%c%c%c%c%c%c%c]\033[0m %s", animation[index], animation[(index + 7) % 8], animation[(index + 6) % 8], animation[(index + 5) % 8], animation[(index + 4) % 8], animation[(index + 3) % 8], animation[(index + 2) % 8], animation[(index + 1) % 8], msg);
+    fflush(stdout);
+    index = (index + 1) % 8;
+}
+
 //TODO:probar a fondo las funciones cuantasVeo
 //Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)
 void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
-  inicializarTablero(&miTablero, "tests/test2.txt");
-  if(esCorrecto(&miTablero, 4, 1)) {//&& esCorrecto(&miTablero, 1, 4) && esCorrecto(&miTablero, 2, 2)) {
-    okay("La funcion valido correctamente");
+  inicializarTablero(&miTablero, "tests/test1.txt");
+  if(esCorrecto(&miTablero, 4, 1)) { 
+    okay("Test 1 pasado");
   }
-  int veo = cuantosVeo(&miTablero, 0, 2);
-  info("Se ven: %d", veo);
+  if(esCorrecto(&miTablero, 2, 4)){
+    info("Test 2 pasado!");
+  }
+  if(esCorrecto(&miTablero, 2,2)) {
+    info("Test 3 pasado!");
+  }
+  info("Runnimg tests for cuantosVeo");
+  if(cuantosVeo(&miTablero, 0 ,3) == 2) {
+    okay("Test 1 cuantosVeo pasado con exito!");
+  }
+  if(cuantosVeo(&miTablero, 2, 5) == 2) {
+    okay("Test 2 cuantosVeo pasado con exito");
+  }
+  if(cuantosVeo(&miTablero, 1, 0) == 1) {
+    okay("Test 3 cuantasVeo pasada con exito");
+  }
+  if(esCorrecto(&miTablero, 1, 1)) {
+    okay("Test 4 esCorrecto pasado!");
+  }
   imprimirTablero(&miTablero);
 }

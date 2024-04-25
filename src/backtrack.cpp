@@ -8,12 +8,16 @@ bool resolverTablero(tablero *miTablero, coords *misCoords) {
     return true;
   }
   else {
-    for(int i = 1; i < miTablero->rows+1; i++) {
-      for(int j = 1; j < miTablero->columns+1; j++) {
+    for(int i = 0; i < miTablero->rows+1; i++) {
+      for(int j = 0; j < miTablero->columns+1; j++) {
         if(miTablero->tablero[i][j] == 0) {
-          for(int k = 1; k < maxColumnOrRow(miTablero); k++) {
+          for(int k = 1; k <= maxColumnOrRow(miTablero); k++) {
+            updateProgressBar("Resolviendo el tablero!\n");
             colocarValor(miTablero, i, j, k);
-            if(esCorrecto(miTablero, i, j)) {
+            imprimirTablero(miTablero);
+            okay("Valor: %d colocado en i: %d, j: %d", k, i, j);
+            if(esCorrecto(miTablero, i+1, i+1)) {
+              info("El valor es correcto");
               if(resolverTablero(miTablero, misCoords)) {
                 return true;
               }
@@ -25,5 +29,6 @@ bool resolverTablero(tablero *miTablero, coords *misCoords) {
       }
     }
   }
+  info("Saliendo 2");
   return false;
 }
