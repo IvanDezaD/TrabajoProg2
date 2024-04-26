@@ -5,6 +5,7 @@
  * 
  */
 #include "colocar.h"
+#include "log.h"
 
 //el tamaño de matriz es 3x3 pero esta funcion nos la guardamos para cuando el tamaño sea dinamico (por si lo hacemos)
 void construirTablero(tablero *miTablero, int rows, int columns) {
@@ -136,14 +137,16 @@ void imprimirTablero(tablero *miTablero) {
 }
 
 /*--------------CUANTOS VEMOS---------------*/
-int cuantosVeoIzda(int vector[], int size) {
-  int maximo = vector[1];
-  int veo = 1;
-  for(int i = 1; i <= size; i++) {
-    if(vector[i] > maximo) {
-      maximo = vector[i];
-      veo++;
-      if(i < size && vector[i] > vector[i+1]) {
+int cuantosVeoIz(tablero* miTablero, int row) {
+  int max = 0;
+  int veo = 0;
+  for(int i = 1; i <= miTablero->columns; i++) {
+    if(miTablero->tablero[row][i] != 0) {
+      if(miTablero->tablero[row][i] > max) {
+        max = miTablero->tablero[row][i];
+        veo++;
+      }
+      if(miTablero->tablero[row][i] > miTablero->tablero[row][i+1] && i < miTablero->columns) {
         return veo;
       }
     }
@@ -151,46 +154,33 @@ int cuantosVeoIzda(int vector[], int size) {
   return veo;
 }
 
-int cuantosVeoDcha(int vector[], int size) {
-  int max = vector[size];
-  int veo = 1;
-  for(int i = size; i > 0; i--) {
-    info("%d, > %d", vector[i], max);
-    if(vector[i] > max) {
-      max = vector[i];
-      veo++;
-      if(i > 0 && vector[i] > vector[i-1]) {
+int cuantosVeoDc(tablero* miTablero, int row) {
+  int  max = 0;
+  int veo = 0;
+  for(int i = miTablero->columns; i > 0; i--) {
+    if(miTablero->tablero[row][i] != 0) {
+      if(miTablero->tablero[row][i] > max) {
+        max = miTablero->tablero[row][i];
+        veo++;
+      }
+      if(miTablero->tablero[row][i] > miTablero->tablero[row][i-1] && i > 1){
         return veo;
       }
     }
   }
-  info("veo: %d", veo);
   return veo;
 }
 
-int cuantosVeoSuperior(tablero *miTablero, int column) {
-  int max = miTablero->tablero[1][column];
-  int veo = 1;
+int cuantosVeoSuperior(tablero* miTablero, int column) {
+  int max = 0;
+  int veo = 0;
   for(int i = 1; i <= miTablero->rows; i++) {
-    if(miTablero->tablero[i][column] > max) {
-      max = miTablero->tablero[i][column];
-      veo++;
-      if(i < miTablero->rows && miTablero->tablero[i][column] > miTablero->tablero[i+1][column]) {
-        return veo;
+    if(miTablero->tablero[i][column] != 0) {
+      if(miTablero->tablero[i][column] > max) {
+        max = miTablero->tablero[i][column];
+        veo++;
       }
-    }
-  }
-  return veo;
-}
-
-int cuantosVeoInferior(tablero *miTablero, int column) {
-  int max = miTablero->tablero[miTablero->rows+1][column];
-  int veo = 1;
-  for(int i = miTablero->rows; i > 0; i--) {
-    if(miTablero->tablero[i][column] > max) {
-      max = miTablero->tablero[i][column];
-      veo++;
-      if(i < 0 && miTablero->tablero[i][column] > miTablero->tablero[i-1][column]) {
+      if(miTablero->tablero[i][column] > miTablero->tablero[i+1][column] && i < miTablero->rows) {
         return veo;
       }
     }
@@ -206,13 +196,13 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
   }
   //Si no es 0, deberia ser columnas
   else if(row == miTablero->rows+1) {
-    return cuantosVeoInferior(miTablero, column);
+    //return cuantosVeoInferior(miTablero, column);
   }
   if(column == 0) {
-    return cuantosVeoIzda(miTablero->tablero[row], miTablero->columns);
+    return cuantosVeoIz(miTablero, row);
   }
   else if(column == miTablero->columns+1) {
-  return cuantosVeoDcha(miTablero->tablero[row], miTablero->columns);
+  return cuantosVeoDc(miTablero, row);
   }
   //Es un error;
   return -1;
@@ -303,7 +293,9 @@ void updateProgressBar(const char* msg) {
 void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
+  coords misCoords;
   inicializarTablero(&miTablero, "tests/test1.txt");
+  inicializarCoods(&misCoords,&miTablero);
   if(esCorrecto(&miTablero, 4, 1)) { 
     okay("Test 1 pasado");
   }
@@ -313,7 +305,7 @@ void tests(void) {
   if(esCorrecto(&miTablero, 2,2)) {
     info("Test 3 pasado!");
   }
-  info("Runnimg tests for cuantosVeo");
+  info("Running tests for cuantosVeo");
   if(cuantosVeo(&miTablero, 0 ,3) == 2) {
     okay("Test 1 cuantosVeo pasado con exito!");
   }
@@ -322,6 +314,18 @@ void tests(void) {
   }
   if(cuantosVeo(&miTablero, 1, 0) == 1) {
     okay("Test 3 cuantasVeo pasada con exito");
+  }
+  info("Probando cuantasVeoV2Iz: %d", cuantosVeoIz(&miTablero, 2));
+  if(cuantosVeoIz(&miTablero, 2) == 3) {
+    okay("Ha pasado el primer test!");
+  }
+  info("Probando cuantasVeoV2Dc: %d", cuantosVeoDc(&miTablero, 2));
+  if(cuantosVeoDc(&miTablero, 2) == 1) {
+    okay("Test cuantasVeoV2Dc pasado con exito!");
+  }
+  info("Probanmdo cuantasVeoSueprior: %d", cuantosVeoSuperior(&miTablero, 1))
+    if(cuantosVeoSuperior(&miTablero, 1) == 3) {
+    info("Test cuantasVeoSuperior pasado con exito!");
   }
   if(esCorrecto(&miTablero, 1, 1)) {
     okay("Test 4 esCorrecto pasado!");
