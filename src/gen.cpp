@@ -29,7 +29,7 @@ void guardarTablero(tablero *miTablero, std::string nombreArchivo){
     archivo.close();
 }
 
-void generateFile(int rows, int columns) {
+void generateFile(int rows, int columns, int i) {
   srand(time(nullptr));
   info("Generando archivo de tablero");
   info("rows: %d columns: %d", rows, columns);
@@ -48,6 +48,11 @@ void generateFile(int rows, int columns) {
       if(i == 0 || j == 0 || i == rows+1 || j == columns+1) {
         miTablero.tablero[i][j] = cuantosVeo(&miTablero, i, j);
       }
+    }
+  }
+  for(int i = 1; i <= rows; i++) {
+    for(int j = 1; j <= columns; j++) {
+      miTablero.tablero[i][j] = 0;
     }
   }
   std::string nombreArchivo = "test" + std::to_string(i) + ".txt";
