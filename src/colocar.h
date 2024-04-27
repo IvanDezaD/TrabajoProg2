@@ -1,5 +1,5 @@
 #pragma once
-#pragma GCC optimize("O3")
+#pragma GCC optimize("O2")
 #include "colocar.h"
 #include "log.h"
 #include <cstdio>
@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
-
 
 //TODO: quedan por hacer las especificaciones formales.
 //TODO: revisar funciones

@@ -69,7 +69,7 @@ int getHeightAt(tablero* miTablero, int row, int column) {
 // Devuelve error si intentamos acceder a una direccion de memoria no valida o a las direcciones que hacen esquina,es decir
 // las que no son parte del tablero a resolver como por ejemplo miTablero->tablero[0][0] o miTablero->tablero[miTablero->rows+1][miTablero->columns+1]
 // Si es una dirección exterior valida, devolvemos su contenido
-if(((row == 0 || row == miTablero->rows+1) && (column!=0 || column!=miTablero->columns+1)) ||((column == 0 || column == miTablero->columns+1) &&(row!=0 || row!=miTablero->rows+1))) {
+  if(((row == 0 || row == miTablero->rows+1) && (column!=0 || column!=miTablero->columns+1)) ||((column == 0 || column == miTablero->columns+1) &&(row!=0 || row!=miTablero->rows+1))) {
     return miTablero->tablero[row][column];
   
   }
@@ -237,10 +237,9 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
 /*---------------ESTA COMPLETA LA FILA-----------------------*/
 bool filaCompleta(tablero *miTablero, int row) {
   for(int i=1;i<=3;i++){
-    info("miTablero->columnns: %d, row:%d, valor:%d", i, row, miTablero->tablero[i][row]);
+    info("miTablero->columnns: %d, row:%d, valor:%d", i, row, miTablero->tablero[row][i]);
   }
-  imprimirTablero(miTablero);
-  return miTablero->tablero[miTablero->columns][row] != 0;
+  return miTablero->tablero[row][miTablero->columns] != 0;
   
 }
 
@@ -271,7 +270,7 @@ bool esCorrecto(tablero *miTablero, int row, int column) {
       return true;
     }
     else {
-      info("False1");
+      info("False 1");
       return false;
     }
   }
