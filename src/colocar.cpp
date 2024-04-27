@@ -47,10 +47,10 @@ void inicializarCoods(coords *misCoords, tablero* miTablero) {
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   info("Colocando altura: %d en las coordenadas: %d, %d", value, row, column);
   //Mandar error si intentamos acceder a una direccion fuera de rango!
-  //if(miTablero->rows<= row+1 || miTablero->columns <= column + 1) {
-  //  liberarTablero(miTablero); //Si falla deberemos liberar la memoria antes de salir para evitar memory leaks
-  //  myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
-  //}
+  if(miTablero->rows <= row+1 || miTablero->columns <= column+1 || row < 0 || column < 0) {
+    liberarTablero(miTablero); //Si falla deberemos liberar la memoria antes de salir para evitar memory leaks
+    myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  }
   //Si la posicion es valida devolvemos su contenido
   miTablero->tablero[row+1][column+1] = value;
 }
@@ -59,16 +59,24 @@ void colocarValor(tablero *miTablero, int row, int column, int value) {
 int valorEnCordenada(tablero *miTablero, int row, int column) {
   info("Obteniendo valor de las coordenadas : %d, %d", row, column);
   //Mandar error si intentamos acceder a una direccion de memoria fuera de rango (invalida, ya que hay mas direcciones validas que no son visibles)
-  //if(miTablero->rows + 1 < row + 1 || miTablero->columns + 1 < column + 1 || row < 1 || column < 1) {
-  //   myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
-  //}
+  if(miTablero->rows <= row+1 || miTablero->columns <= column+1 || row < 0 || column < 0) {
+     myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  }
   return miTablero->tablero[row+1][column+1];
 }
 
 /*------------HEIGHT AT COORDINATE (EXTERIOR)------------*/
 int getHeightAt(tablero* miTablero, int row, int column) {
-  //TODO:Add error log
-  return miTablero->tablero[row][column];
+// Devuelve error si intentamos acceder a una direccion de memoria no valida o a las direcciones que hacen esquina,es decir
+// las que no son parte del tablero a resolver como por ejemplo miTablero->tablero[0][0] o miTablero->tablero[miTablero->rows+1][miTablero->columns+1]
+// Si es una dirección exterior valida, devolvemos su contenido
+if(((row == 0 || row == miTablero->rows+1) && (column!=0 || column!=miTablero->columns+1)) ||((column == 0 || column == miTablero->columns+1) &&(row!=0 || row!=miTablero->rows+1))) {
+    return miTablero->tablero[row][column];
+  
+  }
+  else {
+    myError("Intentando acceder a una posicion no valida en la funcion : %s", __FUNCTION__);
+  }
 }
 
 /*--------NUMERO DE FILAS--------*/
