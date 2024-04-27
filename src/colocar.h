@@ -61,7 +61,7 @@ void inicializarCoods(coords *misCoords, tablero* miTablero);
  * Post: cuantosVeo(miTablero, row, column) = cuantos edificios somos capaces de ver desde la posicion row, y column(siendo row o column un valor dentro de nuestra estructura coordenadas)
  *       esta funcion ya de por si sabe si es izquierda, derecha arriba o abajo y es capaz de determinar en que sentido ha de hacer la comprobacion.
  */
-int cuantosVeo(tablero miTablero, int row, int column);
+int cuantosVeo(tablero *miTablero, int row, int column);
 
 
 /*

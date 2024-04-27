@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "colocar.h"
 #include "backtrack.h"
+#include "gen.h"
 using namespace std;
 
 // Prototipos de funciones
@@ -46,7 +47,8 @@ int prueba(int argc, char* argv[]) {
         switch (opt) {
             case 'g':
                 flagG = true;
-                numTableros = std::stoi(optarg);
+                info("caso g")
+                //numTableros = std::stoi(optarg);
                 break;
             case 't':
                 flagT = true;
@@ -83,7 +85,8 @@ int prueba(int argc, char* argv[]) {
         }
     } 
     else if (flagG) {
-        genTableros(numTableros);
+        info("Generando tableros...");
+        generateFile(3, 3);
     } 
     else if (flagT) {
         testBench();
