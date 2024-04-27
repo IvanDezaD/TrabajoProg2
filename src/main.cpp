@@ -48,7 +48,7 @@ int prueba(int argc, char* argv[]) {
             case 'g':
                 info("caso g");
                 flagG = true;
-                //numTableros = std::stoi(optarg);
+                numTableros = std::stoi(optarg);
                 break;
             case 't':
                 flagT = true;
