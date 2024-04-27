@@ -3,7 +3,6 @@
 
 //Funcion main del programa donde se opera toda la logica
 int main(int argc, char* argv[]) {
-  tests();
   tablero miTablero;
   inicializarTablero(&miTablero, "tests/test1.txt");
   coords misCoords;
