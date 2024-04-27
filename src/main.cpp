@@ -85,8 +85,14 @@ int prueba(int argc, char* argv[]) {
         }
     } 
     else if (flagG) {
+        int numT = 0;
+        cout<<"Introduce el numero de tableros a generar: ";
+        cin>>numT;
         info("Generando tableros...");
-        generateFile(3, 3);
+        for(int i = 1; i <= numT; i++) {
+            generateFile(3, 3, i);
+        }
+        
     } 
     else if (flagT) {
         testBench();

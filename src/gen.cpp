@@ -32,7 +32,7 @@ void guardarTablero(tablero *miTablero, std::string nombreArchivo){
 }
 
 
-void generateFile(int rows, int columns) {
+void generateFile(int rows, int columns,int i)  {
   info("Generando archivo de tablero");
   tablero miTablero;
   construirTablero(&miTablero, rows, columns);
@@ -50,7 +50,7 @@ void generateFile(int rows, int columns) {
       }
     }
   }
-  std::string nombreArchivo = "test1.txt";
+  std::string nombreArchivo = "test" + std::to_string(i) + ".txt";
   guardarTablero(&miTablero, nombreArchivo);
 
 }
