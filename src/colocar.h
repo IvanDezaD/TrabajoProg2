@@ -1,5 +1,5 @@
 #pragma once
-#pragma GCC optimize("O3")
+#pragma GCC optimize("O2")
 #include "colocar.h"
 #include "log.h"
 #include <cstdio>
@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
-
 
 //TODO: quedan por hacer las especificaciones formales.
 //TODO: revisar funciones
@@ -54,7 +53,7 @@ void colocarValor(tablero *miTablero, int row, int column,int value);
  *           misCoords->east = 0
  *           misCoords->west = miTablero->columns+1
  */
-void inicializarCoods(coords *misCoords);
+void inicializarCoods(coords *misCoords, tablero* miTablero);
 
 
 /*
@@ -98,27 +97,40 @@ void liberarTablero(tablero *miTablero);
  * Pre:  recibimos una cadena que contiene el nombre de un fichero ademas del puntero a un tablero NO inicializado.
  * Post: incializara tanto los valores de la estructura (rows, columns) como la matriz, con los valores leidos del fichero.
  */
-void inicializarTablero(tablero *miTablero, std::string fichero);
+bool inicializarTablero(tablero *miTablero, std::string fichero);
 
 /*
- * 
- *
+ * Pre:  recibimos un puntero a un tablero ya inicializado.
+ * Post: getMaxColumns(miTablero) = numero de columnas que tiene el tablero
  */
 int getMaxColumn(tablero *miTablero);
 
-//Recibimos el tablero y devolvemos el numero de filas que tiene
+/*
+ * Pre:  recibimos un puntero a un tablero ya inicializado.
+ * Post: getMaxRows(miTablero) = numero de filas que tiene el tablero.
+ */
 int getMaxRows(tablero *miTablero);
 
-//Recibimos el tablero y lo imprimimos en pantalla
+/*
+ * Pre: recibimos un puntero a un tablero ya inicializado
+ * Post: se muestra por pantalla el tablero
+ */
 void imprimirTablero(tablero *miTablero);
 
-//funcion para podere hacer pruebas de desarrollo
-void tests(void);
-
-//Funcion usada par a mostrar una barra de carga por pantalla: [===>=]msg
+/*
+ * Pre: recibimos una cadena
+ * Post: actualizamos la barra de carga ([===>===] <msg> ->[=====>==] <msg>) da sensacion de movimiento
+ */
 void updateProgressBar(const char* msg);
 
-//Para saber si hay mas columnas o filas
+/*
+ * Pre: recibimos el puntero a un tablero ya inicializado
+ * Post: maxColumnOrRow(miTablero) = el maximo valor que sea de columnas o filas, si hay mas filas devuelve el numero de filas y lo mismo en viceversa.
+ */
 int maxColumnOrRow(tablero* miTablero);
 
+/*
+ * Pre:  recibimos el puntero a un tablero en el cual se ha hecho un movimiento en la posicion row, column.
+ * Post: insertamos un 0 en estas coordenadas(el equivalente a haber deshecho el movimiento!)
+ */
 void borrarMovimiento(tablero* miTablero, int row, int column);

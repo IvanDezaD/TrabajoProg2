@@ -69,13 +69,14 @@ int getHeightAt(tablero* miTablero, int row, int column) {
 // Devuelve error si intentamos acceder a una direccion de memoria no valida o a las direcciones que hacen esquina,es decir
 // las que no son parte del tablero a resolver como por ejemplo miTablero->tablero[0][0] o miTablero->tablero[miTablero->rows+1][miTablero->columns+1]
 // Si es una dirección exterior valida, devolvemos su contenido
-if(((row == 0 || row == miTablero->rows+1) && (column!=0 || column!=miTablero->columns+1)) ||((column == 0 || column == miTablero->columns+1) &&(row!=0 || row!=miTablero->rows+1))) {
+  if(((row == 0 || row == miTablero->rows+1) && (column!=0 || column!=miTablero->columns+1)) ||((column == 0 || column == miTablero->columns+1) &&(row!=0 || row!=miTablero->rows+1))) {
     return miTablero->tablero[row][column];
   
   }
   else {
     myError("Intentando acceder a una posicion no valida en la funcion : %s", __FUNCTION__);
   }
+  return -1;
 }
 
 /*--------NUMERO DE FILAS--------*/
@@ -89,7 +90,7 @@ int getMaxcolumn(tablero* miTablero) {
 }
 
 /*-------------------INICIALIZAMOS EL TABLERO--------------------*/
-bool initTablero(tablero *miTablero, std::string fichero) {
+bool inicializarTablero(tablero *miTablero, std::string fichero) {
   info("Inicializando el tablero!");
   
   std::ifstream myFile;
@@ -237,10 +238,9 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
 /*---------------ESTA COMPLETA LA FILA-----------------------*/
 bool filaCompleta(tablero *miTablero, int row) {
   for(int i=1;i<=3;i++){
-    info("miTablero->columnns: %d, row:%d, valor:%d", i, row, miTablero->tablero[i][row]);
+    info("miTablero->columnns: %d, row:%d, valor:%d", i, row, miTablero->tablero[row][i]);
   }
-  imprimirTablero(miTablero);
-  return miTablero->tablero[miTablero->columns][row] != 0;
+  return miTablero->tablero[row][miTablero->columns] != 0;
   
 }
 
@@ -271,7 +271,7 @@ bool esCorrecto(tablero *miTablero, int row, int column) {
       return true;
     }
     else {
-      info("False1");
+      info("False 1");
       return false;
     }
   }
@@ -350,7 +350,7 @@ void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   coords misCoords;
-  initTablero(&miTablero, "tests/test1.txt");
+  inicializarTablero(&miTablero, "tests/test1.txt");
   inicializarCoods(&misCoords,&miTablero);
   info("Test 1 de esCorrecto: 1,3 -> valor esperado True");
   if(esCorrecto(&miTablero,1, 3)){
