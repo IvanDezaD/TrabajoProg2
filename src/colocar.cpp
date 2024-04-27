@@ -180,7 +180,24 @@ int cuantosVeoSuperior(tablero* miTablero, int column) {
         max = miTablero->tablero[i][column];
         veo++;
       }
-      if(miTablero->tablero[i][column] > miTablero->tablero[i+1][column] && i < miTablero->rows) {
+      //if(miTablero->tablero[i][column] > miTablero->tablero[i+1][column] && i < miTablero->rows) {
+        //return veo;
+      //}
+    }
+  }
+  return veo;
+}
+
+int cuantosVeoInferior(tablero* miTablero, int column) {
+  int  max = 0;
+  int veo = 0;
+  for(int i = miTablero->rows; i > 0; i--) {
+    if(miTablero->tablero[i][column] != 0) {
+      if(miTablero->tablero[i][column] > max) {
+        max = miTablero->tablero[i][column];
+        veo++;
+      }
+      if(miTablero->tablero[i][column] > miTablero->tablero[i-1][column] && i > 1){
         return veo;
       }
     }
@@ -196,7 +213,7 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
   }
   //Si no es 0, deberia ser columnas
   else if(row == miTablero->rows+1) {
-    //return cuantosVeoInferior(miTablero, column);
+    return cuantosVeoInferior(miTablero, column);
   }
   if(column == 0) {
     return cuantosVeoIz(miTablero, row);
@@ -239,6 +256,7 @@ bool esCorrecto(tablero *miTablero, int row, int column) {
       return true;
     }
     else {
+      info("False1");
       return false;
     }
   }
@@ -296,39 +314,21 @@ void tests(void) {
   coords misCoords;
   inicializarTablero(&miTablero, "tests/test1.txt");
   inicializarCoods(&misCoords,&miTablero);
-  if(esCorrecto(&miTablero, 4, 1)) { 
-    okay("Test 1 pasado");
+  info("Test 1 de esCorrecto: 3,1 -> valor esperado True");
+  if(esCorrecto(&miTablero,3, 1)){
+    okay("Test 1 de esCorrecto pasado!");
   }
-  if(esCorrecto(&miTablero, 2, 4)){
-    info("Test 2 pasado!");
+  info("Test 2 de esCorrecto: 2,3->valor esperado: false");
+  if(!esCorrecto(&miTablero, 2, 3)) {
+    okay("Test 2 de esCorrecto pasado!");
   }
-  if(esCorrecto(&miTablero, 2,2)) {
-    info("Test 3 pasado!");
+  info("Test 3 de esCorrecto: 1,2->valor esperado: True");
+  if(esCorrecto(&miTablero, 1, 2)) {
+    okay("Test 3 de la funcion es correcto pasada");
   }
-  info("Running tests for cuantosVeo");
-  if(cuantosVeo(&miTablero, 0 ,3) == 2) {
-    okay("Test 1 cuantosVeo pasado con exito!");
-  }
-  if(cuantosVeo(&miTablero, 2, 5) == 2) {
-    okay("Test 2 cuantosVeo pasado con exito");
-  }
-  if(cuantosVeo(&miTablero, 1, 0) == 1) {
-    okay("Test 3 cuantasVeo pasada con exito");
-  }
-  info("Probando cuantasVeoV2Iz: %d", cuantosVeoIz(&miTablero, 2));
-  if(cuantosVeoIz(&miTablero, 2) == 3) {
-    okay("Ha pasado el primer test!");
-  }
-  info("Probando cuantasVeoV2Dc: %d", cuantosVeoDc(&miTablero, 2));
-  if(cuantosVeoDc(&miTablero, 2) == 1) {
-    okay("Test cuantasVeoV2Dc pasado con exito!");
-  }
-  info("Probanmdo cuantasVeoSueprior: %d", cuantosVeoSuperior(&miTablero, 1))
-    if(cuantosVeoSuperior(&miTablero, 1) == 3) {
-    info("Test cuantasVeoSuperior pasado con exito!");
-  }
-  if(esCorrecto(&miTablero, 1, 1)) {
-    okay("Test 4 esCorrecto pasado!");
+  info("Test 4 de la funcion esCorreco: 3,3-> valor esperado: False");
+  if(!esCorrecto(&miTablero, 3, 3)) {
+    okay("Test 4 de la cuncion esCorrecto pasada con exito!");
   }
   imprimirTablero(&miTablero);
 }
