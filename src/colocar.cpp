@@ -76,6 +76,7 @@ int getHeightAt(tablero* miTablero, int row, int column) {
   else {
     myError("Intentando acceder a una posicion no valida en la funcion : %s", __FUNCTION__);
   }
+  return -1;
 }
 
 /*--------NUMERO DE FILAS--------*/
@@ -89,7 +90,7 @@ int getMaxcolumn(tablero* miTablero) {
 }
 
 /*-------------------INICIALIZAMOS EL TABLERO--------------------*/
-bool initTablero(tablero *miTablero, std::string fichero) {
+bool inicializarTablero(tablero *miTablero, std::string fichero) {
   info("Inicializando el tablero!");
   
   std::ifstream myFile;
@@ -349,7 +350,7 @@ void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   coords misCoords;
-  initTablero(&miTablero, "tests/test1.txt");
+  inicializarTablero(&miTablero, "tests/test1.txt");
   inicializarCoods(&misCoords,&miTablero);
   info("Test 1 de esCorrecto: 1,3 -> valor esperado True");
   if(esCorrecto(&miTablero,1, 3)){

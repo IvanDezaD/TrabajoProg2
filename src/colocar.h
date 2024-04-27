@@ -53,7 +53,7 @@ void colocarValor(tablero *miTablero, int row, int column,int value);
  *           misCoords->east = 0
  *           misCoords->west = miTablero->columns+1
  */
-void inicializarCoods(coords *misCoords);
+void inicializarCoods(coords *misCoords, tablero* miTablero);
 
 
 /*
@@ -97,7 +97,7 @@ void liberarTablero(tablero *miTablero);
  * Pre:  recibimos una cadena que contiene el nombre de un fichero ademas del puntero a un tablero NO inicializado.
  * Post: incializara tanto los valores de la estructura (rows, columns) como la matriz, con los valores leidos del fichero.
  */
-void inicializarTablero(tablero *miTablero, std::string fichero);
+bool inicializarTablero(tablero *miTablero, std::string fichero);
 
 /*
  * Pre:  recibimos un puntero a un tablero ya inicializado.

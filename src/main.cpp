@@ -69,7 +69,7 @@ int prueba(int argc, char* argv[]) {
         tablero miTablero;
         coords misCoords;
         // Usar el argumento proporcionado como nombre del archivo de tablero
-        if (initTablero(&miTablero, argv[optind])) {
+        if (inicializarTablero(&miTablero, argv[optind])) {
             inicializarCoods(&misCoords, &miTablero);
             if (resolverTablero(&miTablero, &misCoords)) {
                 imprimirTablero(&miTablero);
