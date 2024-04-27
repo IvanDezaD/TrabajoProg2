@@ -7,6 +7,6 @@
 #else
 #define info(msg, ...)
 #define okay(msg, ...)
-#define myError(msg, ...) printf("[-] "  msg  " \n", ##__VA_ARGS__); printf("[-] Saliendo!");exit(EXIT_FAILURE)
+#define myError(msg, ...) printf("[-] "  msg  " \n", ##__VA_ARGS__);exit(EXIT_FAILURE)
 #endif // __DEBUG__
 

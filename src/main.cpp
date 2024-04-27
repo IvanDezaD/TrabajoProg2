@@ -33,7 +33,7 @@ void banner() {
 }
 
 void testBench() {
-    std::cout << "Work in progress!" << std::endl;
+    std::cout << "Work in progress !" << std::endl;
 }
 int prueba(int argc, char* argv[]) {
     int opt;
