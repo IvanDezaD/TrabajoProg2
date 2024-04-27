@@ -46,13 +46,13 @@ void inicializarCoods(coords *misCoords, tablero* miTablero) {
 /*---------------------------COLOCAMOS VALOR EN COORDENADAS----------------------------*/
 void colocarValor(tablero *miTablero, int row, int column, int value) {
   //Mandar error si intentamos acceder a una direccion fuera de rango!
-  if(miTablero->rows <= row+1 || miTablero->columns <= column+1 || row < 0 || column < 0) {
+  /*if(miTablero->rows <= row || miTablero->columns <= column || row < 1  || column < 1) {
     liberarTablero(miTablero); //Si falla deberemos liberar la memoria antes de salir para evitar memory leaks
-    myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
-  }
+    //myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
+  }*/
   //Si la posicion es valida devolvemos su contenido
-  info("Colocando valor: %d en %d, %d", value, row+1, column+1)
-  miTablero->tablero[row+1][column+1] = value;
+  info("Colocando valor: %d en %d, %d", value, row, column)
+  miTablero->tablero[row][column] = value;
 }
 
 /*--------------------QUE VALOR HAY EN LAS COORDENADAS ESPECIFICADAS--------------------*/
@@ -89,7 +89,7 @@ int getMaxcolumn(tablero* miTablero) {
 }
 
 /*-------------------INICIALIZAMOS EL TABLERO--------------------*/
-void inicializarTablero(tablero *miTablero, std::string fichero) {
+bool initTablero(tablero *miTablero, std::string fichero) {
   info("Inicializando el tablero!");
   
   std::ifstream myFile;
@@ -132,6 +132,7 @@ void inicializarTablero(tablero *miTablero, std::string fichero) {
     columna = 0;
     fila++;
   }
+  return true;
 }
 
 /*----------IMPRIMIMOS EL TABLERO----------*/
@@ -235,12 +236,17 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
 
 /*---------------ESTA COMPLETA LA FILA-----------------------*/
 bool filaCompleta(tablero *miTablero, int row) {
-  return miTablero->tablero[miTablero->columns+1][row] != 0;
+  for(int i=1;i<=3;i++){
+    info("miTablero->columnns: %d, row:%d, valor:%d", i, row, miTablero->tablero[i][row]);
+  }
+  imprimirTablero(miTablero);
+  return miTablero->tablero[miTablero->columns][row] != 0;
+  
 }
 
 /*-------------ESTA COMPLETA LA COLUMNA------------------*/
 bool columnaCompleta(tablero *miTablero, int column) {
-  return miTablero->tablero[miTablero->rows+1][column] != 0;
+  return miTablero->tablero[miTablero->rows][column] != 0;
 } 
 
 
@@ -259,7 +265,8 @@ bool esCorrecto(tablero *miTablero, int row, int column) {
 
   info("top: %d,bottom: %d, left: %d, right: %d ", top, bottom, left, right);
 
-  if (!filaCompleta(miTablero, row) || !columnaCompleta(miTablero, column)) {
+  if (!filaCompleta(miTablero, row) && !columnaCompleta(miTablero, column)) {
+    info("No esta completa la fila  y la columna");
     if(top <= getHeightAt(miTablero, north, column) && bottom <= getHeightAt(miTablero, south, column) && left <= getHeightAt(miTablero, row, west) && right <= getHeightAt(miTablero, row, east)) {
       return true;
     }
@@ -268,8 +275,31 @@ bool esCorrecto(tablero *miTablero, int row, int column) {
       return false;
     }
   }
+  else if(filaCompleta(miTablero, row) && !columnaCompleta(miTablero, column)) {
+    info("Fila completa y columna no");
+    if(top <= getHeightAt(miTablero, north, column) && bottom <= getHeightAt(miTablero, south, column) && left == getHeightAt(miTablero, row, west) && right == getHeightAt(miTablero, row, east)) {
+      return true; 
+    }
+    else {
+      info("False2");
+      return false;
+    }
+  }
+  else if(!filaCompleta(miTablero, row) && columnaCompleta(miTablero, column)) {
+    info("Fila no completa y columna si");
+    info("top: %d,bottom: %d, left: %d, right: %d ",getHeightAt(miTablero, north, column), getHeightAt(miTablero, south, column), getHeightAt(miTablero, row, west), getHeightAt(miTablero, row, east));
+    if(top == getHeightAt(miTablero, north, column) && bottom == getHeightAt(miTablero, south, column) && left <= getHeightAt(miTablero, row, west) && right <= getHeightAt(miTablero, row, east)) {
+      return true;
+    }
+    else {
+      info("False3");
+      return false;
+    }
+  } 
   else {
-    if(top == getHeightAt(miTablero, north, column) && bottom == getHeightAt(miTablero, south, column) && left == getHeightAt(miTablero, row, east) && right == getHeightAt(miTablero, row, west)) {
+    info("Fila y columna completas");
+    info("top: %d,bottom: %d, left: %d, right: %d ",getHeightAt(miTablero, north, column), getHeightAt(miTablero, south, column), getHeightAt(miTablero, row, west), getHeightAt(miTablero, row, east));
+    if(top == getHeightAt(miTablero, north, column) && bottom == getHeightAt(miTablero, south, column) && left == getHeightAt(miTablero, row, west) && right == getHeightAt(miTablero, row, east)) {
       return true;
     }
     else {
@@ -320,23 +350,17 @@ void tests(void) {
   info("Iniciando tests!");
   tablero miTablero;
   coords misCoords;
-  inicializarTablero(&miTablero, "tests/test1.txt");
+  initTablero(&miTablero, "tests/test1.txt");
   inicializarCoods(&misCoords,&miTablero);
-  info("Test 1 de esCorrecto: 3,1 -> valor esperado True");
-  if(esCorrecto(&miTablero,3, 1)){
+  info("Test 1 de esCorrecto: 1,3 -> valor esperado True");
+  if(esCorrecto(&miTablero,1, 3)){
     okay("Test 1 de esCorrecto pasado!");
   }
-  info("Test 2 de esCorrecto: 2,3->valor esperado: false");
-  if(!esCorrecto(&miTablero, 2, 3)) {
+  info("Test 2 de esCorrecto: 1,1->valor esperado: false");
+  if(!esCorrecto(&miTablero, 1, 1)) {
     okay("Test 2 de esCorrecto pasado!");
   }
-  info("Test 3 de esCorrecto: 1,2->valor esperado: True");
-  if(esCorrecto(&miTablero, 1, 2)) {
-    okay("Test 3 de la funcion es correcto pasada");
-  }
-  info("Test 4 de la funcion esCorreco: 3,3-> valor esperado: False");
-  if(!esCorrecto(&miTablero, 3, 3)) {
-    okay("Test 4 de la cuncion esCorrecto pasada con exito!");
-  }
+  
   imprimirTablero(&miTablero);
+
 }

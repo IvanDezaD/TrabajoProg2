@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-#include "funciones.h"
+#include "colocar.h"
+#include "backtrack.h"
 using namespace std;
 
 // Prototipos de funciones
@@ -14,7 +15,7 @@ void testBench() {
     std::cout << "Ejecutando el test bench..." << std::endl;
     // Lógica para ejecutar el test bench
 }
-int main(int argc, char* argv[]) {
+int prueba(int argc, char* argv[]) {
     int opt;
     bool flagG = false;
     bool flagT = false;
@@ -44,9 +45,9 @@ int main(int argc, char* argv[]) {
         cout << "Resolviendo el tablero normal..." << endl;
         tablero miTablero;
         coords misCoords;
-        inicializarCoods(&misCoords);
         // Usar el argumento proporcionado como nombre del archivo de tablero
-        if (inicializarTablero(&miTablero, argv[optind])) {
+        if (initTablero(&miTablero, argv[optind])) {
+            inicializarCoods(&misCoords, &miTablero);
             if (resolverTablero(&miTablero, &misCoords)) {
                 cout << "El tablero ha sido resuelto" << endl;
                 imprimirTablero(&miTablero);
@@ -70,4 +71,6 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
+int main(int argc, char* argv[]) {
+    return prueba(argc, argv);
+}

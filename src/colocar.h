@@ -38,7 +38,7 @@ void construirTablero(tablero *miTablero, int rows, int columns);
 void colocarValor(tablero *miTablero, int row, int column,int value);
 
 //
-void inicializarCoods(coords *misCoords);
+void inicializarCoods(coords *misCoords, tablero *miTablero);
 
 //Recibimos coordenadas y devolvemos cuantos edificios vemos desde esa coordenada (para este caso importante validar que las coordenadas son correctas)
 int cuantosVeo(tablero miTablero, int row, int column);
@@ -56,7 +56,7 @@ int valorEnCordenada(tablero *miTablero, int row, int column); //return miTabler
 void liberarTablero(tablero *miTablero);
 
 //Recibimos el tablero y ponemos las casillas inicialmente con los valores del fichero!!
-void inicializarTablero(tablero *miTablero, std::string fichero);
+bool initTablero(tablero *miTablero, std::string fichero);
 
 //Recibimos el tablero y devolvemos el numero de columnas que tiene.
 int getMaxColumn(tablero *miTablero);
