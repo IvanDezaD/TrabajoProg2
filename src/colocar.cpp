@@ -227,7 +227,7 @@ int cuantosVeo(tablero *miTablero, int row, int column) {
 
 /*---------------ESTA COMPLETA LA FILA-----------------------*/
 bool filaCompleta(tablero *miTablero, int row) {
-  return miTablero->tablero[miTablero->columns+1][row] != 0;
+  return miTablero->tablero[miTablero->columns][row] != 0;
 }
 
 /*-------------ESTA COMPLETA LA COLUMNA------------------*/
