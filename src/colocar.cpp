@@ -36,6 +36,7 @@ void liberarTablero(tablero* miTablero) {
   free(miTablero->tablero);
 }
 
+/*-------------------FUNCION DE LEGADO-----------------*/
 void inicializarCoods(coords *misCoords, tablero* miTablero) {
   misCoords->north = 0;
   misCoords->south = miTablero->rows+1;
@@ -50,7 +51,6 @@ void colocarValor(tablero *miTablero, int row, int column, int value) {
     liberarTablero(miTablero); //Si falla deberemos liberar la memoria antes de salir para evitar memory leaks
     //myError("Intentando acceder a una posicion no reservada en la funcion : %s", __FUNCTION__);
   }*/
-  //Si la posicion es valida devolvemos su contenido
   info("Colocando valor: %d en %d, %d", value, row, column)
   miTablero->tablero[row][column] = value;
 }
@@ -127,7 +127,7 @@ bool inicializarTablero(tablero *miTablero, std::string fichero) {
     while(iss >> token) {
       //Aqui no podemos usar la funcion colocar valor, ya que por construccion esta diseñada para no poder acceder a elementos 
       //no sean parte del tablero a resolver (lo que inicialmente son 0s).
-      miTablero->tablero[fila][columna] = atoi(&token);
+      miTablero->tablero[fila][columna] = token - '0';
       columna++;
     }
     columna = 0;
@@ -215,7 +215,6 @@ int cuantosVeoInferior(tablero* miTablero, int column) {
   return veo;
 }
 
-//NOTE:FIX THIS SHIT
 /*-----------CUANTAS VEO DESDE X POSICION EXTERIOR---------------*/
 int cuantosVeo(tablero *miTablero, int row, int column) {
   if(row == 0) {
@@ -249,14 +248,20 @@ bool columnaCompleta(tablero *miTablero, int column) {
   return miTablero->tablero[miTablero->rows][column] != 0;
 } 
 
-
+//NOTE: Con mas tiempo mirar en implementar algo similar a esto pero correctamente.
+/*--------------FUNCION DE LEGADO DEL CODIGO------------*/
 bool esCorrecto(tablero *miTablero, int row, int column) {
-  //Convertir de coordenadas a puntos que verificar.
-  //Variables auxiliares por razones de legibilidad (se podrian usar #define pero al tratarse de memDinamica no).
   const int north = 0;
   const int south = miTablero->rows+1;
   const int west  = 0;
   const int east  = miTablero->columns+1;
+
+  for(int i = 0; i <= miTablero->rows+1; i++) {
+    for(int j = 0; j <= miTablero->columns+1; j++) {
+      printf("%d ", miTablero->tablero[i][j]);
+    }
+    printf("\n");
+  }
 
   int top = cuantosVeo(miTablero, north, column);
   int bottom = cuantosVeo(miTablero, south , column);
@@ -324,6 +329,8 @@ bool estaResuelto(tablero *miTablero){
 /*--------------------BORRAMOS EL MOVIMIENTO-------------------*/
 void borrarMovimiento(tablero* miTablero, int row, int column) {
   miTablero->tablero[row][column] = 0;
+  info("Eliminando el valor en las coordenadas %d, %d, (poniendo un 0)", row, column);
+
 }
 
 /*-------------MAX ROW OR COLUMN------------*/
@@ -344,23 +351,25 @@ void updateProgressBar(const char* msg) {
     index = (index + 1) % 8;
 }
 
-//TODO:probar a fondo las funciones cuantasVeo
-//Para añadir un elemento nuevo al tablero se necesita usar siempre la funcion colocarValor, (buena praxis)
-void tests(void) {
-  info("Iniciando tests!");
-  tablero miTablero;
-  coords misCoords;
-  inicializarTablero(&miTablero, "tests/test1.txt");
-  inicializarCoods(&misCoords,&miTablero);
-  info("Test 1 de esCorrecto: 1,3 -> valor esperado True");
-  if(esCorrecto(&miTablero,1, 3)){
-    okay("Test 1 de esCorrecto pasado!");
-  }
-  info("Test 2 de esCorrecto: 1,1->valor esperado: false");
-  if(!esCorrecto(&miTablero, 1, 1)) {
-    okay("Test 2 de esCorrecto pasado!");
-  }
-  
-  imprimirTablero(&miTablero);
+/*------------FUNCION DE BACKUP DE ESCORRECTO-----------*/
+bool esCorrecto2(tablero *miTablero, int row, int column) {
+  return true;
+}
 
+/*-----------FUNCION DE BACKUP DE ESTARESUELTO------------*/
+bool estaResuelto2(tablero *miTablero) {
+  if(!estaResuelto(miTablero)) {
+    return false;
+  }
+  for(int i = 0; i <= miTablero->rows+1; i++) {
+    for(int j = 0; j <= miTablero->columns+1; j++) {
+      if(i == 0 || j == 0 || i == miTablero->rows+1 || j == miTablero->columns+1) {
+        if(!(j == 0 && i == 0 || j == 0 && i == miTablero->rows+1 || j == miTablero->columns+1 && i == 0 || j == miTablero->columns+1 && i == miTablero->rows+1)) {
+          if(cuantosVeo(miTablero, i, j) != getHeightAt(miTablero, i, j))
+            return false;
+        }
+      }
+    }
+  }
+  return true;
 }

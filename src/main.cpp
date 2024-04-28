@@ -16,11 +16,12 @@ void help() {
   cout << "Opciones: \n";
   cout << "\t-g <n>\t genera n tablerso aleatoriamente (todos con solucion) y los guarda en ficheros con nombre test<n>.\n";
   cout << "\t-t\t crea un comportamiento productor consumidor entre un hilo que crea tableros aleatoriamente y otros hilos que los resuelven (futuro)\n";
-  cout << "si no recibimos ninguna opcion, se toma como primer parametro el nombre del fichero a resolver (modo normal que resuelve un tablero)\n";
-  cout << "Abril 2024";
+  cout << "Si no recibimos ninguna opcion, se toma como primer parametro el nombre del fichero a resolver (modo normal que resuelve un tablero)\n";
+  cout << "Abril 2024\n";
 }
 
 void banner() {
+  std::cout << "\033[0;31m";
   std::cout << " ░▒▓██████▓▒░ ░▒▓██████▓▒░░▒▓█▓▒░      ░▒▓██████▓▒░ ░▒▓██████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░  \n";
   std::cout << "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ \n";
   std::cout << "░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ \n";
@@ -29,6 +30,7 @@ void banner() {
   std::cout << "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ \n";
   std::cout << " ░▒▓██████▓▒░ ░▒▓██████▓▒░░▒▓████████▓▒░▒▓██████▓▒░ ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ \n";
   std::cout << "                                                                                            \n";
+  std::cout << "\033[0m";
   std::cout << "          De: Ivan Deza y David Hudrea                                                      \n";
   std::cout << std::endl;
 }
@@ -41,14 +43,14 @@ int prueba(int argc, char* argv[]) {
     bool flagG = false;
     bool flagT = false;
     bool flagH = false;
-    int numTableros = 0;
+    int valor = 0;
 
-    while ((opt = getopt(argc, argv, "gth")) != -1) {
+    while ((opt = getopt(argc, argv, "g:th")) != -1) {
         switch (opt) {
             case 'g':
                 info("caso g");
                 flagG = true;
-                numTableros = std::stoi(optarg);
+                valor = atoi(optarg);
                 break;
             case 't':
                 flagT = true;
@@ -57,6 +59,7 @@ int prueba(int argc, char* argv[]) {
                 flagH = true;
                 break;
             case '?':
+                help();
                 cerr << "Uso: " << argv[0] << " [filename] [-g num_tableros] [-t]" << endl;
                 return 1;
             default:
@@ -69,14 +72,13 @@ int prueba(int argc, char* argv[]) {
     if (!flagG && !flagT && optind == argc - 1) {
         // No se recibió ningún argumento especial, pero se proporcionó el nombre del archivo de tablero
         tablero miTablero;
-        coords misCoords;
         // Usar el argumento proporcionado como nombre del archivo de tablero
         if (inicializarTablero(&miTablero, argv[optind])) {
-            inicializarCoods(&misCoords, &miTablero);
-            if (resolverTablero(&miTablero, &misCoords)) {
+            if (resolverTablero(&miTablero)) {
                 imprimirTablero(&miTablero);
                 liberarTablero(&miTablero);
             } else {
+                imprimirTablero(&miTablero);
                 liberarTablero(&miTablero);
                 myError("El tablero no tiene solucion");
             }
@@ -85,14 +87,7 @@ int prueba(int argc, char* argv[]) {
         }
     } 
     else if (flagG) {
-        int numT = 0;
-        cout<<"Introduce el numero de tableros a generar: ";
-        cin>>numT;
-        info("Generando tableros...");
-        for(int i = 1; i <= numT; i++) {
-            generateFile(3, 3, i);
-        }
-        
+        generarFicheros(valor);
     } 
     else if (flagT) {
         testBench();
@@ -111,5 +106,5 @@ int prueba(int argc, char* argv[]) {
     return 0;
 }
 int main(int argc, char* argv[]) {
-    return prueba(argc, argv);
+  return prueba(argc, argv);
 }

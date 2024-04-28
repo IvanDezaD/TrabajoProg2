@@ -38,3 +38,6 @@ README.md
 # Folders
 obj/*
 tests/*
+.vscode/*
+memoryLeakRes.txt
+probarTests.sh

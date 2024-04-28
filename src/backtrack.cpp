@@ -3,8 +3,8 @@
 #include <unistd.h>
 
 //NOTE: importante destacar que en esta implementacion, el tamaño es NxM, pero en realidad la matriz de verdad es N+2xM+2 ya que tenemos los indicadores de alturas, pero esos posteriormente los ignoramos, sencillamente llamando a la funcion con un +1
-bool resolverTablero(tablero *miTablero, coords *misCoords) {
-  if (estaResuelto(miTablero)) {
+bool resolverTablero(tablero *miTablero) {
+  if (estaResuelto2(miTablero)) {
     return true;
   }
   else {
@@ -15,10 +15,9 @@ bool resolverTablero(tablero *miTablero, coords *misCoords) {
           for(int k = 1; k <= maxColumnOrRow(miTablero); k++) {
             colocarValor(miTablero, i, j, k);
             okay("Valor: %d colocado en i: %d, j: %d", k, i, j);
-            if(esCorrecto(miTablero, i, j)) {
-              info("El valor es correcto");
-              if(resolverTablero(miTablero, misCoords)) {
-                info("Saliendo!");
+            if(esCorrecto2(miTablero, i, j)) {
+              okay("El valor es correcto");
+              if(resolverTablero(miTablero)) {
                 return true;
               }
             }
@@ -29,6 +28,5 @@ bool resolverTablero(tablero *miTablero, coords *misCoords) {
       }
     }
   }
-  info("Saliendo 2");
   return false;
 }

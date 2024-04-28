@@ -98,3 +98,28 @@ void colocarValor(tablero *miTablero, int row, int column, int value) {
 }
 ```
 Ademas, antes de cada acceso a la matriz validamos que es correcto y si no es asi, llamamos a la macro, myError, que concatena un print con un mensaje de error y un traceback de llamadas con un exit.
+
+Para evitar corrupciones de memoria hemos utilizado una herramienta que se llama valgrind que sirve para depurar el estado de la memoria para este tipo de casos.
+La salida de este programa para un caso aleatorio es la siguiente:
+```
+==222670== Memcheck, a memory error detector
+==222670== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==222670== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==222670== Command: ./colocar.out tests/test10.txt
+==222670== Parent PID: 2404
+==222670== 
+==222670== 
+==222670== HEAP SUMMARY:
+==222670==     in use at exit: 0 bytes in 0 blocks
+==222670==   total heap usage: 11 allocs, 11 frees, 83,629 bytes allocated
+==222670== 
+==222670== All heap blocks were freed -- no leaks are possible
+==222670== 
+==222670== For lists of detected and suppressed errors, rerun with: -s
+==222670== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+```
+Como se puede observar de la salida, se hicieron 11 allocs, y 11 frees, lo que quiere decir que todo lo que en algun momento ha sido reservado, ha sido liberado entes de salir..
+
+## Generador de tableros
+Con las mismos funciones que hemos necesitado para resolver el tablero, es posible hacer una funcion que genere tableros para asi probar el programa.
+De esta manera hemos podido escalar las mismas funciones para incluir otra feature!

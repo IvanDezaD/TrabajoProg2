@@ -134,3 +134,7 @@ int maxColumnOrRow(tablero* miTablero);
  * Post: insertamos un 0 en estas coordenadas(el equivalente a haber deshecho el movimiento!)
  */
 void borrarMovimiento(tablero* miTablero, int row, int column);
+
+bool esCorrecto2(tablero *miTablero, int row, int column);
+
+bool estaResuelto2(tablero *miTablero);
