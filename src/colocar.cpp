@@ -352,7 +352,7 @@ void updateProgressBar(const char* msg) {
 }
 
 /*------------FUNCION DE BACKUP DE ESCORRECTO-----------*/
-bool esCorrecto2(tablero *miTablero, int row, int column) {
+bool esCorrecto2() {
   return true;
 }
 
@@ -364,7 +364,7 @@ bool estaResuelto2(tablero *miTablero) {
   for(int i = 0; i <= miTablero->rows+1; i++) {
     for(int j = 0; j <= miTablero->columns+1; j++) {
       if(i == 0 || j == 0 || i == miTablero->rows+1 || j == miTablero->columns+1) {
-        if(!(j == 0 && i == 0 || j == 0 && i == miTablero->rows+1 || j == miTablero->columns+1 && i == 0 || j == miTablero->columns+1 && i == miTablero->rows+1)) {
+        if(!((j == 0 && i == 0) || (j == 0 && i == miTablero->rows+1) || (j == miTablero->columns+1 && i == 0) || (j == miTablero->columns+1 && i == miTablero->rows+1))) {
           if(cuantosVeo(miTablero, i, j) != getHeightAt(miTablero, i, j))
             return false;
         }

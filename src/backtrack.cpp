@@ -15,7 +15,7 @@ bool resolverTablero(tablero *miTablero) {
           for(int k = 1; k <= maxColumnOrRow(miTablero); k++) {
             colocarValor(miTablero, i, j, k);
             okay("Valor: %d colocado en i: %d, j: %d", k, i, j);
-            if(esCorrecto2(miTablero, i, j)) {
+            if(esCorrecto2()) {
               okay("El valor es correcto");
               if(resolverTablero(miTablero)) {
                 return true;

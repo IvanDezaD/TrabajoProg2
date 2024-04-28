@@ -5,7 +5,7 @@ TARGET = colocar.out
 CC = g++
 
 # Opciones de compilación
-CFLAGS = -Wall -Wextra -std=c++11 -DMEMWATCH -DMW_STDIO
+CFLAGS = -Wall -Wextra -std=c++11
 
 # Carpetas de código fuente y de objetos
 SRCDIR = src

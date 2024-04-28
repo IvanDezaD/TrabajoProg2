@@ -135,6 +135,6 @@ int maxColumnOrRow(tablero* miTablero);
  */
 void borrarMovimiento(tablero* miTablero, int row, int column);
 
-bool esCorrecto2(tablero *miTablero, int row, int column);
+bool esCorrecto2();
 
 bool estaResuelto2(tablero *miTablero);
