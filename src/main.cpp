@@ -1,10 +1,17 @@
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <unistd.h>
 #include "colocar.h"
 #include "backtrack.h"
 #include "gen.h"
+#include <signal.h>
 using namespace std;
+
+void ctrl_cHandler(int signum) {
+  printf("\nCtrl_c detectado: %d, saliendo!", signum);
+  exit(EXIT_FAILURE);
+}
 
 // Prototipos de funciones
 void genTableros(int numTableros) {
@@ -107,5 +114,6 @@ int prueba(int argc, char* argv[]) {
     return 0;
 }
 int main(int argc, char* argv[]) {
+  signal(SIGINT, ctrl_cHandler);
   return prueba(argc, argv);
 }
