@@ -31,7 +31,7 @@ void guardarTablero(tablero *miTablero, std::string nombreArchivo){
 
 void generarFicheros(int numFicheros) {
   srand(time(nullptr));
-  for(int i = 0; i <= numFicheros; i++) {
+  for(int i = 0; i < numFicheros; i++) {
     generateFile(ROWS, COLUMNS, i);
   }
 }

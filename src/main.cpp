@@ -88,6 +88,7 @@ int prueba(int argc, char* argv[]) {
     } 
     else if (flagG) {
         generarFicheros(valor);
+        printf("Se generaron %d ficheros y se guardaron en la carpeta tests\n", valor);
     } 
     else if (flagT) {
         testBench();

@@ -33,10 +33,20 @@ $(OBJDIR):
 debug:	CFLAGS += -D__DEBUG__
 debug:	clean $(TARGET)
 
+help:
+	@echo "Uso: make [TARGET]"
+	@echo " "
+	@echo "Objetivos disponibles:"
+	@echo "               Compila con modo release (sin mensajes extra de depuracion)"
+	@echo "help      Mostrar este menú de ayuda"
+	@echo "debug     Compila con modo de depuracion (incluye mensajes extra que ayudan a depurar como corre el programa)"
+	@echo "clean     Limpia el binario y los .o generados durante la compilacion."
+	@echo "          Por Ivan Deza y David Hudrea"
+
 # Regla para limpiar
 clean:
 		rm -rf $(OBJDIR) $(TARGET)
 
 # PHONY targets
-.PHONY: clean debug
+.PHONY: clean debug help
 
