@@ -12,15 +12,11 @@
 #include <string.h>
 #include <sstream>
 
-//TODO: quedan por hacer las especificaciones formales.
-//TODO: revisar funciones
-//TODO: quedan por implementar: estaResuelto(redundante pero para verificar) y esCorrecto. 
-
 /*----Nuestra estructura tablero-----*/
 typedef struct {
   int rows;
   int columns;
-  int** tablero; //muy posiblemente esto no sea necesario
+  int** tablero; 
 } tablero;
 
 typedef struct {
@@ -75,7 +71,6 @@ bool esCorrecto(tablero* miTablero, int row, int column);
  * Pre:  recibimos un puntero a un tablero 
  * Post: devolveremos true si y solo si el tablero ya se ha terminado de resolver y esta correctamente resuelto (por construccion esto ocurre si el tablero esta lleno ya que antes)
  *       de efectuar cada movimiento ya se comprueba si es valido o no.
- *
  */
 bool estaResuelto(tablero *miTablero);
 
@@ -135,6 +130,13 @@ int maxColumnOrRow(tablero* miTablero);
  */
 void borrarMovimiento(tablero* miTablero, int row, int column);
 
+// Pre: true
+// Post: true
 bool esCorrecto2();
 
+/*
+* Pre:  Recibimos el puntero a un tablero inicializado que cabe la posibilidad de que este resuelto
+* Post: Devolvemos true si y solo si, el numero de edificios que se ve desde x posicion de las afueras,
+* es el mismo que esta escrito ahi. Todo esto para todas las casillas
+*/
 bool estaResuelto2(tablero *miTablero);

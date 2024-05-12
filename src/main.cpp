@@ -10,12 +10,8 @@ using namespace std;
 
 void ctrl_cHandler(int signum) {
   printf("\nCtrl_c detectado: %d, saliendo!", signum);
+  printf("\033[?25h");
   exit(EXIT_FAILURE);
-}
-
-// Prototipos de funciones
-void genTableros(int numTableros) {
-    std::cout << "Generando " << numTableros << " tableros..." << std::endl;
 }
 
 void help() {
@@ -45,7 +41,7 @@ void banner() {
 void testBench() {
     std::cout << "Work in progress !" << std::endl;
 }
-int prueba(int argc, char* argv[]) {
+int arguments(int argc, char* argv[]) {
     int opt;
     bool flagG = false;
     bool flagT = false;
@@ -75,11 +71,11 @@ int prueba(int argc, char* argv[]) {
         }
     }
 
-    // Verificar qué acción tomar según los argumentos recibidos
+    // Verificamos que accion hacer en caso de los parametros recibidos
     if (!flagG && !flagT && optind == argc - 1) {
         // No se recibió ningún argumento especial, pero se proporcionó el nombre del archivo de tablero
         tablero miTablero;
-        // Usar el argumento proporcionado como nombre del archivo de tablero
+        // Usamos el argumento proporcionado como nombre del archivo de tablero
         if (inicializarTablero(&miTablero, argv[optind])) {
             if (resolverTablero(&miTablero)) {
                 imprimirTablero(&miTablero);
@@ -113,7 +109,13 @@ int prueba(int argc, char* argv[]) {
     }
     return 0;
 }
+
+//NOTE:Añadir criba (resolvemos filas en vez de casillas individuales)
 int main(int argc, char* argv[]) {
-  signal(SIGINT, ctrl_cHandler);
-  return prueba(argc, argv);
+  printf("\033[?25l"); //Quitamos el cursor
+  //printf("\033[H\033[2J");
+  signal(SIGINT, ctrl_cHandler); //Manejador de señales (ctrl_c)
+  arguments(argc, argv);
+  printf("\033[?25h");
+  return 0;
 }

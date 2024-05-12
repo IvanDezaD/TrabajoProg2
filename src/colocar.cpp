@@ -138,6 +138,7 @@ bool inicializarTablero(tablero *miTablero, std::string fichero) {
 
 /*----------IMPRIMIMOS EL TABLERO----------*/
 void imprimirTablero(tablero *miTablero) {
+  //printf("\033[H");
   for(int i = 1; i < miTablero->rows+1; i++) {
     for(int j = 1; j < miTablero->columns+1; j++) {
      std::cout << miTablero->tablero[i][j] << " ";
@@ -156,9 +157,9 @@ int cuantosVeoIz(tablero* miTablero, int row) {
         max = miTablero->tablero[row][i];
         veo++;
       }
-      if(miTablero->tablero[row][i] > miTablero->tablero[row][i+1] && i < miTablero->columns) {
-        return veo;
-      }
+      //if(miTablero->tablero[row][i] > miTablero->tablero[row][i+1] && i < miTablero->columns) {
+      //  return veo;
+      //}
     }
   }
   return veo;
@@ -173,9 +174,9 @@ int cuantosVeoDc(tablero* miTablero, int row) {
         max = miTablero->tablero[row][i];
         veo++;
       }
-      if(miTablero->tablero[row][i] > miTablero->tablero[row][i-1] && i > 1){
-        return veo;
-      }
+      //if(miTablero->tablero[row][i] > miTablero->tablero[row][i-1] && i > 1){
+      //  return veo;
+      //}
     }
   }
   return veo;
@@ -207,9 +208,9 @@ int cuantosVeoInferior(tablero* miTablero, int column) {
         max = miTablero->tablero[i][column];
         veo++;
       }
-      if(miTablero->tablero[i][column] > miTablero->tablero[i-1][column] && i > 1){
-        return veo;
-      }
+      //if(miTablero->tablero[i][column] > miTablero->tablero[i-1][column] && i > 1){
+      //  return veo;
+      //}
     }
   }
   return veo;
