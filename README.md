@@ -123,3 +123,8 @@ Como se puede observar de la salida, se hicieron 11 allocs, y 11 frees, lo que q
 ## Generador de tableros
 Con las mismos funciones que hemos necesitado para resolver el tablero, es posible hacer una funcion que genere tableros para asi probar el programa.
 De esta manera hemos podido escalar las mismas funciones para incluir otra feature!
+
+## Optimizacion
+Se tras un tiempo con el proyecto terminado, se nos ocurrio una optimizacion que reduciria bastante el coste en  tiempo de nuestro programa. La solucion consistiria en primero encontrar con backtracking, TODAS las soluciones de las filas, para posteriormente, hacer backtracking sobre las soluciones encontradas, hasta hallar una coincidiencia. Esto reduciria enormemente el coste en tiempo ya que reducimos el numero decasos evaluados.
+
+Por cuestiones de tiempo no hemos podido implementarlp, pero nos ha parecido bien comentarlo aquí.
