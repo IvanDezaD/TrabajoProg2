@@ -1,3 +1,7 @@
+/*
+*  Ivan Deza: 837603
+*  David Hudrea: 868573
+*/ 
 #pragma once
 #include "colocar.h"
 #include <cstring>

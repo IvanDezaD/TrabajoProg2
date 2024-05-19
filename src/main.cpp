@@ -1,3 +1,7 @@
+/*
+*  Ivan Deza: 837603
+*  David Hudrea: 868573
+*/ 
 #include <cstdlib>
 #include <iostream>
 #include <string>

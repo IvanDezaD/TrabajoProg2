@@ -4,6 +4,12 @@
  *  13 Apr 2024
  * 
  */
+
+/*
+*  Ivan Deza: 837603
+*  David Hudrea: 868573
+*/ 
+
 #include "colocar.h"
 #include "log.h"
 
